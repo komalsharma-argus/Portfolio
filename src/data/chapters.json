@@ -1,0 +1,62 @@
+[
+  {
+    "number": 1,
+    "key": "PostgreSQL",
+    "title": "PostgreSQL",
+    "link": "/docs/overview/postgresql"
+  },
+  {
+    "number": 2,
+    "key": "JavaScript",
+    "title": "JavaScript",
+    "link": "/docs/overview/javascript"
+  },
+  {
+    "number": 3,
+    "key": "npm",
+    "title": "npm",
+    "link": "/docs/npm"
+  },
+  {
+    "number": 4,
+    "key": "NodeJS",
+    "title": "Node.js",
+    "link": "/docs/overview/nodejs"
+  },
+  {
+    "number": 5,
+    "key": "React",
+    "title": "React",
+    "link": "/docs/overview/react"
+  },
+  {
+    "number": 6,
+    "key": "Git & GitHub",
+    "title": "Git & GitHub",
+    "link": "/docs/Git & GitHub"
+  },
+  {
+    "number": 7,
+    "key": "Yarn",
+    "title": "Yarn",
+    "link": "/docs/Yarn"
+  },
+  {
+    "number": 8,
+    "key": "Webpack",
+    "title": "Webpack",
+    "link": "/docs/Webpack"
+  },
+  {
+    "number": 9,
+    "key": "OWASP-Top-10",
+    "title": "OWASP Top 10 (2025)",
+    "link": "/docs/OWASP-Top-10"
+  },
+  {
+    "number": 10,
+    "key": "AZ-900-Ms-Azure-Fundamentals",
+    "title": "AZ-900: Azure Fundamentals",
+    "link": "/docs/AZ-900-Ms-Azure-Fundamentals"
+  }
+]

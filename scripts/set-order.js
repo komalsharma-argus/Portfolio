@@ -35,7 +35,17 @@ const LABELS = {
 };
 
 // Folders with no README of their own get a temporary generated landing page
-const LANDING = ['JavaScript', 'React', 'NodeJS', 'PostgreSQL'];
+// const LANDING = ['JavaScript', 'React', 'NodeJS', 'PostgreSQL'];
+
+const chapters = [];
+
+const hasIndexDoc = (relPath) => {
+  const base = path.basename(relPath).toLowerCase();
+  return fs
+    .readdirSync(path.join(DOCS, relPath))
+    .some((f) => /\.mdx?$/.test(f) && ['readme', 'index', base].includes(f.replace(/\.mdx?$/, '').toLowerCase()));
+};
+const slugify = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
 const natural = (a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' });
 
@@ -72,16 +82,27 @@ function walk(rel) {
   sorted.forEach((name, i) => {
     const position = i + 1;
     const childRel = rel ? `${rel}/${name}` : name;
-    if (dirs.includes(name)) {
+      if (dirs.includes(name)) {
       const json = { position };
       if (LABELS[childRel]) json.label = LABELS[childRel];
-      if (LANDING.includes(childRel)) json.link = { type: 'generated-index' };
+      if (rel === '') {
+        const key = name.replace(/^\d+\s*[-_.]+\s*/, ''); // Docusaurus drops number prefixes from URLs
+        const hasLanding = hasIndexDoc(childRel);
+        const slug = slugify(key);
+        if (!hasLanding) json.link = { type: 'generated-index', slug: `/overview/${slug}` };
+        chapters.push({
+          number: chapters.length + 1,
+          key,
+          title: LABELS[childRel] || key,
+          link: hasLanding ? `/docs/${key}` : `/docs/overview/${slug}`,
+        });
+      }
       fs.writeFileSync(path.join(DOCS, childRel, '_category_.json'), JSON.stringify(json, null, 2) + '\n');
       walk(childRel);
-    } else if (rel !== '' && names.length > 1 && !['readme', 'index', folderName].includes(name.toLowerCase())) {
-      setPosition(path.join(abs, docs.find((f) => docName(f) === name)), position);
     }
   });
 }
 
 walk('');
+fs.mkdirSync('src/data', { recursive: true });
+fs.writeFileSync('src/data/chapters.json', JSON.stringify(chapters, null, 2) + '\n');

@@ -1,43 +1,47 @@
+import React, {useState} from 'react';
 import clsx from 'clsx';
-import Link from '@docusaurus/Link';
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
-import HomepageFeatures from '@site/src/components/HomepageFeatures';
-
-import Heading from '@theme/Heading';
+import Link from '@docusaurus/Link';
 import styles from './index.module.css';
 
-function HomepageHeader() {
-  const {siteConfig} = useDocusaurusContext();
-  return (
-    <header className={clsx('hero hero--primary', styles.heroBanner)}>
-      <div className="container">
-        <Heading as="h1" className="hero__title">
-          {siteConfig.title}
-        </Heading>
-        <p className="hero__subtitle">{siteConfig.tagline}</p>
-        {/* <button className="btn btn-primary">Hello World</button> */}
-        <div className={styles.buttons}>
-          <Link
-            className="button button--secondary button--lg"
-            to="/docs/intro">
-            Docusaurus Tutorial - 5min ⏱️
-          </Link>
-        </div>
-      </div>
-    </header>
-  );
-}
+const AUTHOR = {
+  name: 'Komal Sharma',
+  role: 'Programmer Analyst',
+  bio: 'Notes of all the topics learnt during my probation period.',
+  github: 'https://github.com/komalsharma-argus',
+};
+
+const STACK = [
+  ['Docusaurus', 'turns my Markdown files into pages and routes'],
+  ['React', 'powers the book layout and table of contents'],
+  ['Tailwind CSS + DaisyUI', 'styling, themes and dark/light mode'],
+  ['GitHub', 'every chapter is a .md file in my repositories'],
+];
 
 export default function Home() {
-  const {siteConfig} = useDocusaurusContext();
   return (
-    <Layout
-      title={`Hello from ${siteConfig.title}`}
-      description="Description will go into a meta tag in <head />">
-      <HomepageHeader />
-      <main>
-        <HomepageFeatures />
+    <Layout title="Home" description="A book of developer notes on important topics">
+      <main className={styles.book}>
+        <section className={styles.page}>
+          <p className={styles.kicker}>A living book of</p>
+          <h1>Programmer Analyst Intern Notes</h1>
+          <p className={styles.by}>by {AUTHOR.name}</p>
+          <h2>About the author</h2>
+          <p><strong>{AUTHOR.name}</strong>, {AUTHOR.role}</p>
+          <p>{AUTHOR.bio}</p>
+          <a href={AUTHOR.github} target="_blank" rel="noreferrer">GitHub →</a>
+        </section>
+        <section className={styles.page}>
+          <h2>How it's built</h2>
+          <ul>
+            {STACK.map(([name, what]) => (
+              <li key={name}><strong>{name}</strong>: {what}</li>
+            ))}
+          </ul>
+          <Link to="/docs/intro" className={clsx('btn btn-lg', styles.cta)}>
+            Start Reading
+          </Link>
+        </section>
       </main>
     </Layout>
   );
