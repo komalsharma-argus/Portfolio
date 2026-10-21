@@ -12,7 +12,7 @@ import {themes as prismThemes} from 'prism-react-renderer';
 const config = {
   title: 'My Site',
   tagline: 'Dinosaurs are cool',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/logo.png',
   // markdown: { format: 'detect' },
   plugins: ['./plugins/tailwind-plugin'],
 
@@ -90,7 +90,7 @@ const config = {
         title: 'Developer Notes',
         logo: {
           alt: 'My Site Logo',
-          src: 'img/logo.svg',
+          src: 'img/logo.png',
         },
         // items: [
         //   {
