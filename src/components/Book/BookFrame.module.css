@@ -15,8 +15,10 @@
   --cover-dark: #0f0a07;
 }
 .book {
-  height: calc(100vh - var(--ifm-navbar-height));
-  height: calc(100dvh - var(--ifm-navbar-height));
+  height: calc(100vh - var(--ifm-navbar-height) - var(--book-footer-height));
+  height: calc(100dvh - var(--ifm-navbar-height) - var(--book-footer-height));
+  /* height: calc(100vh - var(--ifm-navbar-height));
+  height: calc(100dvh - var(--ifm-navbar-height)); */
   min-height: 520px;
 }
 .paper {

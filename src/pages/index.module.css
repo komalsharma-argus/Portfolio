@@ -50,6 +50,11 @@
 }
 
 @media (max-width: 996px) {
-  .book { grid-template-columns: 1fr; height: auto; min-height: calc(100vh - var(--ifm-navbar-height)); background: var(--paper); }
+  .book { 
+    grid-template-columns: 1fr; 
+    height: auto;
+    min-height: calc(100vh - var(--ifm-navbar-height) - var(--book-footer-height));
+    /* min-height: calc(100vh - var(--ifm-navbar-height)); background: var(--paper);  */
+  }
   .page { justify-content: flex-start; padding: 2rem 1.5rem; }
 }

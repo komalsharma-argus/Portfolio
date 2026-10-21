@@ -8,7 +8,6 @@ const AUTHOR = {
   name: 'Komal Sharma',
   role: 'Programmer Analyst',
   bio: 'Notes of all the topics learnt during my probation period.',
-  github: 'https://github.com/komalsharma-argus',
 };
 
 const STACK = [
@@ -29,7 +28,6 @@ export default function Home() {
           <h2>About the author</h2>
           <p><strong>{AUTHOR.name}</strong>, {AUTHOR.role}</p>
           <p>{AUTHOR.bio}</p>
-          <a href={AUTHOR.github} target="_blank" rel="noreferrer">GitHub →</a>
         </section>
         <section className={styles.page}>
           <h2>How it's built</h2>

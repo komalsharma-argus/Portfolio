@@ -35,7 +35,8 @@ import BackToTopButton from '@theme/BackToTopButton';
 
 export default function DocRootLayout({children}) {
   return (
-    <div className="min-h-screen">
+    // <div className="min-h-screen">
+    <div>
       <BackToTopButton />
       <main>{children}</main>
     </div>
