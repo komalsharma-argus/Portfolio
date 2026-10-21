@@ -16,11 +16,14 @@ export default function DocItemLayout({children}) {
       ? `Chapter ${chapter.number} · ${chapter.title}`
       : metadata.title;
 
+  const bookmark =
+  !isIntro && chapter ? {chapterKey: chapter.key, path: metadata.permalink} : null;
   return (
     <BookFrame
       key={metadata.id}
       runningHead={runningHead}
       toc={toc}
+      bookmark={bookmark}
       showBack={!isIntro}
       prev={metadata.previous}
       next={metadata.next}>

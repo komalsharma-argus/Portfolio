@@ -22,3 +22,15 @@
 .entry:hover::after { opacity: 1; }
 .num { min-width: 2ch; opacity: 0.6; font-variant-numeric: tabular-nums; }
 .dots { flex: 1; border-bottom: 2px dotted currentColor; opacity: 0.35; transform: translateY(-4px); }
+.item { display: flex; align-items: baseline; gap: 0.75rem; }
+.item .entry { flex: 1; min-width: 0; }
+.resume {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: #9b2d30;
+  text-decoration: none;
+}
+.resume:hover { color: #9b2d30; text-decoration: underline; }
+:global([data-theme='dark']) .resume { color: #e08a88; }

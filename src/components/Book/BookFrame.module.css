@@ -38,6 +38,39 @@
   );
 }
 
+/* bookmark ribbon */
+.ribbon {
+  position: absolute;
+  z-index: 4;
+  top: 0;
+  right: 3rem;
+  width: 28px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.22);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 76%, 0 100%);
+  transition: height 0.2s, background 0.2s;
+}
+.ribbon:hover { height: 50px; background: rgba(0, 0, 0, 0.35); }
+.ribbonOn { height: 54px; background: #9b2d30; }
+.ribbonOn:hover { height: 58px; background: #b23a3d; }
+:global([data-theme='dark']) .ribbonOn { background: #b5403f; }
+
+button.menuLink {
+  display: block;
+  width: 100%;
+  padding: 0;
+  font: inherit;
+  font-weight: bold;
+  text-align: left;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+@media (max-width: 996px) { .ribbon { right: 1.5rem; } }
+
 /* top bar */
 .header { position: relative; z-index: 3; display: flex; align-items: center; gap: 1rem; min-height: 2.5rem; }
 .menuBtn {

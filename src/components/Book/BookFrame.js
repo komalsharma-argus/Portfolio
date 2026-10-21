@@ -1,14 +1,20 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import Link from '@docusaurus/Link';
 import styles from './BookFrame.module.css';
+import clsx from 'clsx';
+import useBookmarks from './useBookmarks';
 
-export default function BookFrame({runningHead, toc = [], showBack = true, prev, next, children}) {
+export default function BookFrame({runningHead, toc = [], showBack = true, prev, next, bookmark = null, children}) {
   const viewportRef = useRef(null);
   const columnsRef = useRef(null);
   const contentRef = useRef(null);
   const [spread, setSpread] = useState(0);
   const [spreads, setSpreads] = useState(1);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [bookmarkedHere, setBookmarkedHere] = useState(false);
+
+  const {bookmarks, setBookmark, clearBookmark} = useBookmarks();
+  const mine = bookmark ? bookmarks[bookmark.chapterKey] : undefined;
 
   // distance between two spreads = visible width + column gap
   const getStep = () => {
@@ -52,6 +58,21 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
     return () => window.removeEventListener('keydown', onKey);
   }, [spreads]);
 
+  const blocksRoot = () => contentRef.current.querySelector('.markdown') || contentRef.current;
+
+  const spreadOf = useCallback((el) => {
+    const x = el.getBoundingClientRect().left - columnsRef.current.getBoundingClientRect().left;
+    return Math.max(0, Math.floor((x + 2) / getStep()));
+  }, []);
+
+  const firstBlockOfSpread = () => {
+    const blocks = [...blocksRoot().children];
+    const left = columnsRef.current.getBoundingClientRect().left;
+    const start = spread * getStep() - 2;
+    const i = blocks.findIndex((el) => el.getBoundingClientRect().left - left >= start);
+    return i === -1 ? Math.max(0, blocks.length - 1) : i;
+  };
+
   // jump to the spread that contains a heading
   const goToHeading = useCallback((id) => {
     const el = document.getElementById(id);
@@ -59,7 +80,52 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
     const x = el.getBoundingClientRect().left - columnsRef.current.getBoundingClientRect().left;
     setSpread(Math.max(0, Math.floor((x + 2) / getStep())));
     setMenuOpen(false);
-  }, []);
+  }, [spreadOf]);
+
+  const goToBlock = useCallback((index) => {
+    const el = blocksRoot().children[index];
+    if (!el) return;
+    setSpread(spreadOf(el));
+    setMenuOpen(false);
+  }, [spreadOf]);
+
+  // open directly at a #hash
+  useEffect(() => {
+    if (!window.location.hash) return;
+    const t = setTimeout(() => goToHeading(decodeURIComponent(window.location.hash.slice(1))), 450);
+    return () => clearTimeout(t);
+  }, [goToHeading]);
+
+  useEffect(() => {
+    if (!bookmark || !mine || mine.path !== bookmark.path) {
+      setBookmarkedHere(false);
+      return;
+    }
+    const el = blocksRoot().children[mine.block];
+    setBookmarkedHere(el ? spreadOf(el) === spread : false);
+  }, [bookmark?.path, mine, spread, spreads, spreadOf]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const toggleBookmark = () => {
+    if (!bookmark) return;
+    if (bookmarkedHere) {
+      clearBookmark(bookmark.chapterKey);
+    } else {
+      setBookmark(bookmark.chapterKey, {path: bookmark.path, block: firstBlockOfSpread(), savedAt: Date.now()});
+    }
+  };
+
+  // opened from a bookmark link (?bm=<block>): jump to that block
+  useEffect(() => {
+    const bm = new URLSearchParams(window.location.search).get('bm');
+    if (bm === null) return;
+    const run = () => goToBlock(parseInt(bm, 10));
+    const t1 = setTimeout(run, 450);
+    const t2 = setTimeout(run, 1300); // again, once fonts and images have settled
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
+  }, [goToBlock]);
 
   // open directly at a #hash
   useEffect(() => {
@@ -97,6 +163,16 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
             )}
             <span className={styles.running}>{runningHead}</span>
           </header>
+          {bookmark && (
+            <button
+              type="button"
+              className={clsx(styles.ribbon, bookmarkedHere && styles.ribbonOn)}
+              onClick={toggleBookmark}
+              aria-pressed={bookmarkedHere}
+              aria-label={bookmarkedHere ? 'Remove bookmark' : 'Bookmark this page'}
+              title={bookmarkedHere ? 'Remove bookmark' : mine ? 'Move bookmark here' : 'Bookmark this page'}
+            />
+          )}
 
           {menuOpen && (
             <>
@@ -105,6 +181,16 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
                 {showBack && (
                   <Link to="/docs/intro" className={styles.menuLink}>← Table of Contents</Link>
                 )}
+                {bookmark && mine && !bookmarkedHere &&
+                  (mine.path === bookmark.path ? (
+                    <button type="button" className={styles.menuLink} onClick={() => goToBlock(mine.block)}>
+                      Go to bookmark
+                    </button>
+                  ) : (
+                    <Link to={`${mine.path}?bm=${mine.block}`} className={styles.menuLink}>
+                      Go to bookmark →
+                    </Link>
+                  ))}
                 {toc.length > 0 && (
                   <>
                     <p className={styles.menuLabel}>On this page</p>

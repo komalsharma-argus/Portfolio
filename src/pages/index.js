@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import Layout from '@theme/Layout';
 import Link from '@docusaurus/Link';
 import styles from './index.module.css';
+import useBookmarks from '../components/Book/useBookmarks';
 
 const AUTHOR = {
   name: 'Komal Sharma',
@@ -18,6 +19,8 @@ const STACK = [
 ];
 
 export default function Home() {
+  const {bookmarks} = useBookmarks();
+  const latest = Object.values(bookmarks).sort((a, b) => b.savedAt - a.savedAt)[0];
   return (
     <Layout title="Home" description="A book of developer notes on important topics">
       <main className={styles.book}>
@@ -36,9 +39,14 @@ export default function Home() {
               <li key={name}><strong>{name}</strong>: {what}</li>
             ))}
           </ul>
-          <Link to="/docs/intro" className={clsx('btn btn-lg', styles.cta)}>
-            Start Reading
-          </Link>
+          <div className={styles.actions}>
+            <Link to="/docs/intro" className={clsx('btn btn-lg', styles.cta)}>Start Reading</Link>
+            {latest && (
+              <Link to={`${latest.path}?bm=${latest.block}`} className={clsx('btn btn-lg', styles.resumeBtn)}>
+                Continue reading
+              </Link>
+            )}
+          </div>
         </section>
       </main>
     </Layout>
