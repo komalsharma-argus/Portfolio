@@ -110,11 +110,21 @@ button.menuLink {
   transform: translateX(calc(var(--spread, 0) * -1 * (100% + var(--gap))));
   transition: transform 0.55s cubic-bezier(0.4, 0.1, 0.2, 1);
 }
-.content img, .content table, .content blockquote,
+.content img, .content blockquote,
 .content :global(.theme-code-block), .content :global(.admonition) { break-inside: avoid; }
 .content h2, .content h3, .content h4 { break-after: avoid; }
 .content img { max-width: 100%; height: auto; }
 .columnBreak { break-after: column; } /* used on the intro page: contents left, preface right */
+
+.content table {
+  display: table;
+  width: 100%;
+  overflow: visible;
+  break-inside: auto;
+}
+.content tr { break-inside: avoid; }          /* a row is never split in the middle */
+.content th, .content td { overflow-wrap: anywhere; }
+.content th code, .content td code { white-space: normal; }
 
 /* bottom bar */
 .footer { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 2.25rem; }
