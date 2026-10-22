@@ -1,0 +1,25 @@
+.overlay { position: fixed; z-index: 150; pointer-events: none; perspective: 2600px; }
+.still { position: absolute; top: 0; height: 100%; overflow: hidden; }
+.flipper { position: absolute; top: 0; height: 100%; transform-style: preserve-3d; }
+.face {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  box-shadow: 0 0 24px rgba(0, 0, 0, 0.25);
+}
+.back { transform: rotateY(180deg); }
+.face::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: rgba(0, 0, 0, 0.45);
+  opacity: 0;
+}
+.turning .face::after { animation: pageShade 0.9s ease-in-out; }
+@keyframes pageShade {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 0.28; }
+}
