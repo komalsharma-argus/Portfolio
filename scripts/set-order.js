@@ -3,8 +3,6 @@ const path = require('path');
 
 const DOCS = 'docs';
 
-// Order of children per folder ('' = docs root). Entries are folder names or file names without .md.
-// Anything not listed goes last in natural order (NodeJS is left out because its chapter numbers already sort correctly).
 const ORDER = {
   '': ['PostgreSQL', 'JavaScript', 'npm', 'NodeJS', 'React', 'Git & GitHub', 'Yarn', 'Webpack', '2025-OWASP-Top-10', 'AZ-900-Ms-Azure-Fundamentals'],
   'JavaScript': [
@@ -27,15 +25,11 @@ const ORDER = {
   'PostgreSQL/pgExercises': ['Basic-Queries', 'BasicQueriesSchemaMetadata', 'Joins&SubQueries', 'ModifyingData', 'Aggregation', 'Date', 'String', 'Recursive'],
 };
 
-// Changing default display label(folder name)
 const LABELS = {
   'NodeJS': 'Node.js',
   '2025-OWASP-Top-10': 'OWASP Top 10 (2025)',
   'AZ-900-Ms-Azure-Fundamentals': 'AZ-900: Azure Fundamentals',
 };
-
-// Folders with no README of their own get a temporary generated landing page
-// const LANDING = ['JavaScript', 'React', 'NodeJS', 'PostgreSQL'];
 
 const chapters = [];
 
