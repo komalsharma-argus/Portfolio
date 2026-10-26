@@ -8,7 +8,7 @@ This guide covers three topics:
 
 ---
 
-## 1. Controlled vs Uncontrolled Components
+#### 1. Controlled vs Uncontrolled Components
 
 Form elements (`<input>`, `<textarea>`, `<select>`) naturally keep their own value in the DOM. React gives you two ways to handle that value.
 
@@ -20,7 +20,7 @@ Form elements (`<input>`, `<textarea>`, `<select>`) naturally keep their own val
 | Re-renders per keystroke | Yes | No |
 | Initial value | `value` | `defaultValue` |
 
-### Controlled components
+##### Controlled components
 
 The input's value is **driven by React state**. Every change goes through a handler, so React always knows the current value.
 
@@ -91,7 +91,7 @@ function ProfileForm() {
 
 **Trade-offs:** more boilerplate, and a re-render on each keystroke (rarely a problem unless the form is very large).
 
-### Uncontrolled components
+##### Uncontrolled components
 
 The **DOM holds the value**. You read it with a `ref` when you need it.
 
@@ -150,7 +150,7 @@ function ContactForm() {
 
 **Trade-offs:** you can't easily validate live, transform input as it's typed, or drive other UI from the value.
 
-### Rules and pitfalls
+##### Rules and pitfalls
 
 - Use `value` **with** `onChange` (controlled) or `defaultValue` (uncontrolled). Never mix them on the same input.
 - `value` without `onChange` makes the input **read-only** and React will warn you.
@@ -161,7 +161,7 @@ const [name, setName] = useState();   // ❌ undefined → uncontrolled, then co
 const [name, setName] = useState(""); // ✅ always controlled
 ```
 
-### Which should I use?
+##### Which should I use?
 
 | Scenario | Choice |
 |---|---|
@@ -173,7 +173,7 @@ const [name, setName] = useState(""); // ✅ always controlled
 
 ---
 
-## 2. Lifting State Up
+#### 2. Lifting State Up
 
 When **two or more components need the same data**, move the state to their **closest common parent** and pass it down through props. The parent becomes the single source of truth, and children communicate changes back through callback props.
 
@@ -185,7 +185,7 @@ When **two or more components need the same data**, move the state to their **cl
       ↑ onChange (callback)
 ```
 
-### The problem
+##### The problem
 
 Sibling components can't share state directly. Each keeps its own copy, so they drift out of sync.
 
@@ -201,7 +201,7 @@ function FahrenheitInput() {
 }
 ```
 
-### The solution: lift the state
+##### The solution: lift the state
 
 **Step 1: Make the children controlled by props.** Remove their local state.
 **Step 2: Move the state to the parent.**
@@ -240,7 +240,7 @@ function Converter() {
 
 Both inputs always agree because they read from one state. Note that `fahrenheit` is **derived** during render, not stored separately.
 
-### Example: child-to-parent communication
+##### Example: child-to-parent communication
 
 A child can't change the parent's state directly. It calls a function the parent passed down.
 
@@ -268,7 +268,7 @@ function Shop() {
 }
 ```
 
-### Guidelines
+##### Guidelines
 
 - Lift state to the **closest** common ancestor, no higher than necessary.
 - Keep **one source of truth** per piece of data. Don't duplicate it in multiple places.
@@ -276,7 +276,7 @@ function Shop() {
 - Name callback props with `on...` (`onChange`, `onSubmit`) and handlers with `handle...`.
 - Data flows **down** (props), events flow **up** (callbacks). This is React's one-way data flow.
 
-### Warning signs
+##### Warning signs
 
 | Symptom | Likely cause |
 |---|---|
@@ -286,11 +286,11 @@ function Shop() {
 
 ---
 
-## 3. Component Modularity & Composition
+#### 3. Component Modularity & Composition
 
 **Modularity** means splitting the UI into small, focused, reusable components. **Composition** means combining those components to build larger ones. React favors composition over inheritance.
 
-### Principles of good components
+##### Principles of good components
 
 | Principle | Meaning |
 |---|---|
@@ -300,14 +300,14 @@ function Shop() {
 | **Predictable** | Same props and state produce the same output |
 | **Loosely coupled** | Components know as little as possible about each other |
 
-### When to split a component
+##### When to split a component
 
 - It has grown past ~100-150 lines or does multiple jobs
 - A piece of markup repeats in several places
 - Part of it has its own state or logic
 - It's hard to name or test
 
-### Example: from monolith to modular
+##### Example: from monolith to modular
 
 **Before: one large component**
 
@@ -379,9 +379,9 @@ function ProfilePage({ user }) {
 }
 ```
 
-### Composition techniques
+##### Composition techniques
 
-#### 1. Containment with `children`
+###### 1. Containment with `children`
 
 For generic "boxes" that don't know their content in advance.
 
@@ -396,7 +396,7 @@ function Card({ children }) {
 </Card>
 ```
 
-#### 2. Slots (multiple named children via props)
+###### 2. Slots (multiple named children via props)
 
 When a component has several distinct areas to fill.
 
@@ -416,7 +416,7 @@ function Layout({ header, sidebar, children }) {
 </Layout>
 ```
 
-#### 3. Specialization
+###### 3. Specialization
 
 A specific component is a configured version of a generic one.
 
@@ -430,7 +430,7 @@ function DeleteButton(props) {
 }
 ```
 
-#### 4. Compound components
+###### 4. Compound components
 
 Related components that work together and share implicit state.
 
@@ -474,7 +474,7 @@ function TabPanel({ id, children }) {
 </Tabs>
 ```
 
-#### 5. Render props
+###### 5. Render props
 
 Pass a function that tells a component *what to render*, while it handles the logic.
 
@@ -492,7 +492,7 @@ function MouseTracker({ render }) {
 <MouseTracker render={({ x, y }) => <p>Mouse at {x}, {y}</p>} />
 ```
 
-### Avoiding prop drilling with composition
+##### Avoiding prop drilling with composition
 
 Instead of passing props through layers that don't use them, pass the **finished element** down.
 
@@ -509,7 +509,7 @@ function App() {
 
 Intermediate components stay simple and no longer need to know about `user`.
 
-### Folder organization (example)
+##### Folder organization (example)
 
 ```
 src/
@@ -523,7 +523,7 @@ src/
 └── pages/               # Route-level components that assemble the rest
 ```
 
-### Best practices
+##### Best practices
 
 - Prefer **props and composition** over deep conditionals and giant components.
 - Keep components **presentational** (UI only) where possible, and place data fetching and logic in parents or hooks.
@@ -532,7 +532,7 @@ src/
 - Avoid over-abstraction: don't create a reusable component until you actually reuse it (roughly the "rule of three").
 - Colocate files (component, styles, tests) that change together.
 
-### Component design checklist
+##### Component design checklist
 
 - [ ] Does it do one job?
 - [ ] Is it configurable through props?
@@ -543,7 +543,7 @@ src/
 
 ---
 
-## Quick Reference
+#### Quick Reference
 
 | Topic | Core idea | Remember |
 |---|---|---|

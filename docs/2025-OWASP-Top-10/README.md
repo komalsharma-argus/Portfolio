@@ -2,28 +2,26 @@
 
 ##### (Open Web Application Security Project OR Open Worldwide Application Security Project)
 
-
-
-## What is DevSecOps?
+#### What is DevSecOps?
 
 * It refers to the integration of security practices into a DevOps software delivery model.
 * It is the practice of integrating security into every phase of the software development lifecycle (SDLC) instead of treating it as a final gate before release.
 * In a DevSecOps model, security objectives are integrated as early as possible in the lifecycle of software development and security considerations are important throughout the lifecycle.
 
-## Vulnerabilities
+#### Vulnerabilities
 
 * A security vulnerability is a software code flaw or a system misconfiguration that hackers can use to gain unauthorized access to a system or network.
 * A vulnerability is a weakness in software, configuration, or process that an attacker can exploit to compromise confidentiality, integrity, or availability (the CIA triad).
 
-## Exploit
+#### Exploit
 
 An exploit is the method hackers used to exploit a vulnerability and exploit is typically a piece of custom software or a sequence of commands.
 
-## Threat
+#### Threat
 
 A threat is the actual or hypothetical event in which one or more exploits vulnerability to mount an attack.
 
-## Key terminology
+#### Key terminology
 &#x09;
 |Term|Definition|
 |-|-|
@@ -36,12 +34,12 @@ A threat is the actual or hypothetical event in which one or more exploits vulne
 |Zero-day|A vulnerability with no available patch, often unknown to the vendor.|
 |PoC|Proof of Concept: demonstrates that a vulnerability is exploitable.|
 
-## What is DevOps?
+#### What is DevOps?
 
 * A set of practices that combines software development and IT Operations.
 * It aims to shorten the Systems Development Lifecycle and provides continuous delivery with high software availability.
 
-## DevOps vs DevSecOps
+#### DevOps vs DevSecOps
 |Aspect|DevOps|DevSecOps|
 |-|-|-|
 |Goal|Deliver software faster and more reliably|Deliver software faster, reliably, and securely|
@@ -53,7 +51,7 @@ A threat is the actual or hypothetical event in which one or more exploits vulne
 |Compliance|Manual audits|Automated, continuous compliance checks|
 |Feedback Loop|Test failures|Test failures plus vulnerability findings in PRs/IDE|
 
-### Advantages of DevSecOps over DevOps
+##### Advantages of DevSecOps over DevOps
 
 * faster delivery
 * improved security posture
@@ -62,15 +60,15 @@ A threat is the actual or hypothetical event in which one or more exploits vulne
 * improving security integration and pace
 * enhancing the value of DevOps
 
-#### Container Challenges (Containers are writing OS level things)
+###### Container Challenges (Containers are writing OS level things)
 
 * Increased scope of responsibility
 * Lack of expertise
 * Maintaining velocity
 
-#### Security vulnerabilities can be found in all different areas related to software.
+###### Security vulnerabilities can be found in all different areas related to software.
 
-### Types of Vulnerabilities(Official Lists)
+##### Types of Vulnerabilities(Official Lists)
 
 1. CWE: Common Weakness Enumeration
 
@@ -92,9 +90,9 @@ A threat is the actual or hypothetical event in which one or more exploits vulne
 
 
 
-### 1.CWE: Common Weakness Enumeration
+##### 1.CWE: Common Weakness Enumeration
 
-#### 1.Porous Defenses
+###### 1.Porous Defenses
 
 * A porous defenses weakness is one that could allow users to bypass or spoof authentication and authorization processes. **Authentication** verifies the identity of someone trying to access a system while **authorization** is set of access and usage permissions assigned to the user.
 * Porous defense weakness examples:
@@ -105,7 +103,7 @@ A threat is the actual or hypothetical event in which one or more exploits vulne
   * insecurely inherited permissions
   * sessions that do not expire in a timely manner.
 
-#### 2. Risky Resource Management
+###### 2. Risky Resource Management
 
 * Risky management of resources such as memory, functions and open-source frameworks.
 * Examples:
@@ -114,7 +112,7 @@ A threat is the actual or hypothetical event in which one or more exploits vulne
   * buffer overflow
   * path traversal
 
-#### 3. Insecure Interaction Between Components
+###### 3. Insecure Interaction Between Components
 
 * Many applications today send and receive data across a wide range of services, threads and processes. The way different components interact with each other can introduce vulnerabilities.
 * Examples:
@@ -127,15 +125,15 @@ A threat is the actual or hypothetical event in which one or more exploits vulne
   * trojan horses
   * other exploits...
 
-### 2. OWASP Top 10
+##### 2. OWASP Top 10
 
 The Open Worldwide Application Security Project (OWASP) is an open community dedicated to enabling organizations to develop, purchase, and maintain applications and APIs that can be trusted.
 
-#### What are Application Security Risks?
+###### What are Application Security Risks?
 
 Attackers can potentially use many different paths through your application to do harm to your business or organization. Each of these ways poses a potential risk that needs to be investigated.
 
-#### Data Factors to determine application security lists:
+###### Data Factors to determine application security lists:
 
 There are data factors that are listed for each of the Top Ten Categories, here is what they mean:
 
@@ -155,12 +153,11 @@ There are data factors that are listed for each of the Top Ten Categories, here 
 
 * **Formula:** (Max Incidence Rate % \* 1000) + (Max Coverage % \* 100) + (Avg Exploit \* 10) + (Avg Impact \* 20) + (Sum Occurrences / 10000) = Risk Score
 
-###### A01: Broken Access Control
+##### A01: Broken Access Control
 
 ###### Description.
 
 Access control enforces policy such that users cannot act outside of their intended permissions. Failures typically lead to unauthorized information disclosure, modification or destruction of all data, or performing a business function outside the user's limits. Common access control vulnerabilities include:
-
 
 
 * Violation of the principle of least privilege, commonly known as deny by default, where access should only be granted for particular capabilities, roles, or users, but is available to anyone.
@@ -196,19 +193,13 @@ Developers and QA staff should include functional access control in their unit a
 
 
 
-###### \#A02: Security Misconfiguration
+##### A02: Security Misconfiguration
 
-
-
-###### \#Description.
+###### Description.
 
 Security misconfiguration is when a system, application, or cloud service is set up incorrectly from a security perspective, creating vulnerabilities.
 
-
-
 The application might be vulnerable if:
-
-
 
 * It is missing appropriate security hardening across any part of the application stack or improperly configured permissions on cloud services.
 * Unnecessary features are enabled or installed (e.g., unnecessary ports, services, pages, accounts, testing frameworks, or privileges).
@@ -220,13 +211,9 @@ The application might be vulnerable if:
 * The server does not send security headers or directives, or they are not set to secure values.
 * Without a concerted, repeatable application security configuration hardening process, systems are at a higher risk.
 
-
-
-###### \#How to prevent.
+###### How to prevent.
 
 Secure installation processes should be implemented, including:
-
-
 
 * A repeatable hardening process enabling the fast and easy deployment of another environment that is appropriately locked down. Development, QA, and production environments should all be configured identically, with different credentials used in each environment. This process should be automated to minimize the effort required to set up a new secure environment.
 * A minimal platform without any unnecessary features, components, documentation, or samples. Remove or do not install unused features and frameworks.
@@ -238,21 +225,13 @@ Secure installation processes should be implemented, including:
 * If these verifications are not automated, they should be manually verified annually at a minimum.
 * Use identity federation, short-lived credentials, or role-based access mechanisms provided by the underlying platform instead of embedding static keys or secrets in code, configuration files, or pipelines.
 
+##### A03: Software Supply Chain Failures
 
-
-###### \#A03: Software Supply Chain Failures
-
-
-
-###### \#Description.
+###### Description.
 
 Software supply chain failures are breakdowns or other compromises in the process of building, distributing, or updating software. They are often caused by vulnerabilities or malicious changes in third-party code, tools, or other dependencies that the system relies on.
 
-
-
 You are likely vulnerable if:
-
-
 
 * you do not carefully track the versions of all components that you use (both client-side and server-side). This includes components you directly use as well as nested (transitive) dependencies.
 * the software is vulnerable, unsupported, or out of date. This includes the OS, web/application server, database management system (DBMS), applications, APIs and all components, runtime environments, and libraries.
@@ -267,20 +246,13 @@ You are likely vulnerable if:
 * your CI/CD pipeline has weaker security than the systems it builds and deploys, especially if it is complex.
 
 
+##### A04: Cryptographic Failures
 
-###### \#A04: Cryptographic Failures
-
-
-
-###### \#Description.
+###### Description.
 
 Generally speaking, all data in transit should be encrypted at the transport layer (OSI layer 4). Previous hurdles such as CPU performance and private key/certificate management are now handled by CPUs having instructions designed to accelerate encryption (eg: AES support) and private key and certificate management being simplified by services like LetsEncrypt.org with major cloud vendors providing even more tightly integrated certificate management services for their specific platforms.
 
-
-
 Beyond securing the transport layer, it is important to determine what data needs encryption at rest as well as what data needs extra encryption in transit (at the application layer, OSI layer 7). For example, passwords, credit card numbers, health records, personal information, and business secrets require extra protection, especially if that data falls under privacy laws, e.g., EU's General Data Protection Regulation (GDPR), or regulations such as PCI Data Security Standard (PCI DSS). For all such data:
-
-
 
 * Are any old or weak cryptographic algorithms or protocols used either by default or in older code?
 * Are default crypto keys in use, are weak crypto keys generated, are keys re-used, or is proper key management and rotation missing?
@@ -294,62 +266,38 @@ Beyond securing the transport layer, it is important to determine what data need
 * Are cryptographic error messages or side channel information exploitable, for example in the form of padding oracle attacks?
 * Can the cryptographic algorithm be downgraded or bypassed?
 
+##### A05: Injection
 
-
-###### \#A05: Injection
-
-
-
-###### \#Description
+###### Description
 
 An injection vulnerability is an application flaw that allows untrusted user input to be sent to an interpreter (e.g. a browser, database, the command line) and causes the interpreter to execute parts of that input as commands.
 
-
-
 An application is vulnerable to attack when:
-
-
 
 * User-supplied data is not validated, filtered, or sanitized by the application.
 * Dynamic queries or non-parameterized calls without context-aware escaping are used directly in the interpreter.
 * Unsanitized data is used within object-relational mapping (ORM) search parameters to extract additional, sensitive records.
 * Potentially hostile data is directly used or concatenated. The SQL or command contains the structure and malicious data in dynamic queries, commands, or stored procedures.
 
-
-
 Some of the more common injections are SQL, NoSQL, OS command, Object Relational Mapping (ORM), LDAP, and Expression Language (EL) or Object Graph Navigation Library (OGNL) injection. The concept is identical among all interpreters. Detection is best achieved by a combination of source code review along with automated testing (including fuzzing) of all parameters, headers, URL, cookies, JSON, SOAP, and XML data inputs. The addition of static (SAST), dynamic (DAST), and interactive (IAST) application security testing tools into the CI/CD pipeline can also be helpful to identify injection flaws before production deployment.
 
+##### A06: Insecure Design
 
-
-###### \#A06: Insecure Design
-
-
-
-###### \#Description
+###### Description
 
 Insecure design is a broad category representing different weaknesses, expressed as “missing or ineffective control design.” Insecure design is not the source for all other Top Ten risk categories. Note that there is a difference between insecure design and insecure implementation. We differentiate between design flaws and implementation defects for a reason, they have different root causes, take place at different times in the development process, and have different remediations. A secure design can still have implementation defects leading to vulnerabilities that may be exploited. An insecure design cannot be fixed by a perfect implementation as needed security controls were never created to defend against specific attacks. One of the factors that contributes to insecure design is the lack of business risk profiling inherent in the software or system being developed, and thus the failure to determine what level of security design is required.
 
-
-
 Three key parts of having a secure design are:
-
-
 
 * Gathering Requirements and Resource Management
 * Creating a Secure Design
 * Having a Secure Development Lifecycle
 
+##### A07: Authentication Failures
 
-
-###### \#A07: Authentication Failures
-
-
-
-###### \#Description
+###### Description
 
 When an attacker is able to trick a system into recognizing an invalid or incorrect user as legitimate, this vulnerability is present. There may be authentication weaknesses if the application:
-
-
 
 * Permits automated attacks such as credential stuffing, where the attacker has a breached list of valid usernames and passwords. More recently this type of attack has been expanded to include hybrid password attacks credential stuffing (also known as password spray attacks), where the attacker uses variations or increments of spilled credentials to gain access, for instance trying Password1!, Password2!, Password3! and so on.
 * Permits brute force or other automated, scripted attacks that are not quickly blocked.
@@ -364,19 +312,13 @@ When an attacker is able to trick a system into recognizing an invalid or incorr
 * Does not correctly invalidate user sessions or authentication tokens (mainly single sign-on (SSO) tokens) during logout or a period of inactivity.
 * Does not correctly assert the scope and intended audience of the provided credentials.
 
+##### A08: Software or Data Integrity Failures
 
-
-###### \#A08: Software or Data Integrity Failures
-
-
-
-###### \#Description
+###### Description
 
 Software and data integrity failures relate to code and infrastructure that does not protect against invalid or untrusted code or data being treated as trusted and valid. An example of this is where an application relies upon plugins, libraries, or modules from untrusted sources, repositories, and content delivery networks (CDNs). An insecure CI/CD pipeline without consuming and providing software integrity checks can introduce the potential for unauthorized access, insecure or malicious code, or system compromise. Another example of this is a CI/CD that pulls code or artifacts from untrusted places and/or doesn’t verify them before use (by checking the signature or similar mechanism). Lastly, many applications now include auto-update functionality, where updates are downloaded without sufficient integrity verification and applied to the previously trusted application. Attackers could potentially upload their own updates to be distributed and run on all installations. Another example is where objects or data are encoded or serialized into a structure that an attacker can see and modify is vulnerable to insecure deserialization.
 
-
-
-###### \#How To Prevent
+##### How To Prevent
 
 * Use digital signatures or similar mechanisms to verify the software or data is from the expected source and has not been altered.
 * Ensure libraries and dependencies, such as npm or Maven, are only consuming trusted repositories. If you have a higher risk profile, consider hosting an internal known-good repository that's vetted.
@@ -384,17 +326,11 @@ Software and data integrity failures relate to code and infrastructure that does
 * Ensure that your CI/CD pipeline has proper segregation, configuration, and access control to ensure the integrity of the code flowing through the build and deploy processes.
 * Ensure that unsigned or unencrypted serialized data is not received from untrusted clients and subsequently used without some form of integrity check or digital signature to detect tampering or replay of the serialized data.
 
+##### A09: Security Logging and Alerting Failure
 
-
-###### \#A09: Security Logging and Alerting Failure
-
-
-
-###### \#Description
+##### Description
 
 Without logging and monitoring, attacks and breaches cannot be detected, and without alerting it is very difficult to respond quickly and effectively during a security incident. Insufficient logging, continuous monitoring, detection, and alerting to initiate active responses occurs any time:
-
-
 
 * Auditable events, such as logins, failed logins, and high-value transactions, are not logged or logged inconsistently (for instance, only logging successful logins, but not failed attempts).
 * Warnings and errors generate no, inadequate, or unclear log messages.
@@ -411,25 +347,14 @@ Without logging and monitoring, attacks and breaches cannot be detected, and wit
 * Too many false positive alerts make it impossible to distinguish important alerts from unimportant ones, resulting in them being recognized too late or not at all (physical overload of the SOC team).
 * Detected alerts cannot be processed correctly because the playbook for the use case is incomplete, out of date, or missing.
 
+##### A10: Mishandling of Exceptional Conditions
 
-
-###### \#A10: Mishandling of Exceptional Conditions
-
-
-
-###### \#Description
+###### Description
 
 Mishandling exceptional conditions in software happens when programs fail to prevent, detect, and respond to unusual and unpredictable situations, which leads to crashes, unexpected behavior, and sometimes vulnerabilities. This can involve one or more of the following 3 failings; the application doesn’t prevent an unusual situation from happening, it doesn’t identify the situation as it is happening, and/or it responds poorly or not at all to the situation afterwards.
 
-
-
 Exceptional conditions can be caused by missing, poor, or incomplete input validation, or late, high level error handling instead at the functions where they occur, or unexpected environmental states such as memory, privilege, or network issues, inconsistent exception handling, or exceptions that are not handled at all, allowing the system to fall into an unknown and unpredictable state. Any time an application is unsure of its next instruction, an exceptional condition has been mishandled. Hard-to-find errors and exceptions can threaten the security of the whole application for a long time.
-
-
 
 Many different security vulnerabilities can happen when we mishandle exceptional conditions,
 
-
-
 such as logic bugs, overflows, race conditions, fraudulent transactions, or issues with memory, state, resource, timing, authentication, and authorization. These types of vulnerabilities can negatively affect the confidentiality, availability, and/or integrity of a system or it’s data. Attackers manipulate an application's flawed error handling to strike this vulnerability.
-

@@ -1,52 +1,13 @@
-# Webpack: The Complete Guide for Software Engineers
+# Webpack: The Complete Guide
 
 A practical and in-depth reference to **Webpack 5**: core concepts, configuration, optimization, internals, and interview-ready knowledge.
 
-\---
 
-## Table of Contents
-
-1. [What is Webpack and Why Use It](#1-what-is-webpack-and-why-use-it)
-2. [Core Concepts](#2-core-concepts)
-3. [Installation and Quick Start](#3-installation-and-quick-start)
-4. [Configuration Basics](#4-configuration-basics)
-5. [Entry Points](#5-entry-points)
-6. [Output](#6-output)
-7. [Mode and Environment-Specific Configs](#7-mode-and-environment-specific-configs)
-8. [Loaders](#8-loaders)
-9. [Asset Modules](#9-asset-modules)
-10. [Plugins](#10-plugins)
-11. [Module Resolution](#11-module-resolution)
-12. [Dev Server and Hot Module Replacement](#12-dev-server-and-hot-module-replacement)
-13. [Source Maps (devtool)](#13-source-maps-devtool)
-14. [Code Splitting](#14-code-splitting)
-15. [Tree Shaking and Dead Code Elimination](#15-tree-shaking-and-dead-code-elimination)
-16. [Caching and Long-Term Caching](#16-caching-and-long-term-caching)
-17. [Build Performance Optimization](#17-build-performance-optimization)
-18. [Bundle Size Optimization and Analysis](#18-bundle-size-optimization-and-analysis)
-19. [Externals](#19-externals)
-20. [Targets, Browserslist and Polyfills](#20-targets-browserslist-and-polyfills)
-21. [Module Federation (Micro-Frontends)](#21-module-federation-micro-frontends)
-22. [Web Workers, WebAssembly and Special Modules](#22-web-workers-webassembly-and-special-modules)
-23. [Writing a Custom Loader](#23-writing-a-custom-loader)
-24. [Writing a Custom Plugin](#24-writing-a-custom-plugin)
-25. [How Webpack Works Internally](#25-how-webpack-works-internally)
-26. [Common Framework Setups](#26-common-framework-setups)
-27. [Environment Variables](#27-environment-variables)
-28. [Debugging and Troubleshooting](#28-debugging-and-troubleshooting)
-29. [Production Checklist](#29-production-checklist)
-30. [Migrating from Webpack 4 to 5](#30-migrating-from-webpack-4-to-5)
-31. [Webpack vs Other Bundlers](#31-webpack-vs-other-bundlers)
-32. [Interview Questions and Answers](#32-interview-questions-and-answers)
-33. [Resources](#33-resources)
-
-
-
-## 1\. What is Webpack and Why Use It
+#### 1\. What is Webpack and Why Use It
 
 **Webpack** is a **static module bundler** for JavaScript applications. It starts from one or more entry points, builds a **dependency graph** of every module your project needs (JS, CSS, images, fonts, JSON, WASM, etc.), and emits one or more **bundles** that browsers (or Node.js) can load.
 
-### Problems it solves
+##### Problems it solves
 
 |Problem|How Webpack helps|
 |-|-|
@@ -58,7 +19,7 @@ A practical and in-depth reference to **Webpack 5**: core concepts, configuratio
 |Developer experience|Dev server, Hot Module Replacement, source maps|
 |Sharing code across apps|Module Federation|
 
-### Key characteristics
+##### Key characteristics
 
 * **Everything is a module** (via loaders / asset modules).
 * Supports **ESM, CommonJS, AMD**, and mixes of them.
@@ -66,9 +27,8 @@ A practical and in-depth reference to **Webpack 5**: core concepts, configuratio
 * Built on **Tapable**, an event/hook system that powers the whole architecture.
 * Has a **persistent filesystem cache** (v5) for fast rebuilds.
 
-\---
 
-## 2\. Core Concepts
+#### 2\. Core Concepts
 
 ```
  Entry  ──►  Module graph  ──►  Loaders transform  ──►  Chunks  ──►  Output bundles
@@ -93,7 +53,7 @@ A practical and in-depth reference to **Webpack 5**: core concepts, configuratio
 
 \---
 
-## 3\. Installation and Quick Start
+#### 3\. Installation and Quick Start
 
 ```bash
 mkdir my-app \&\& cd my-app
@@ -153,7 +113,7 @@ Run `npm run build`; output lands in `dist/`.
 
 \---
 
-## 4\. Configuration Basics
+#### 4\. Configuration Basics
 
 Webpack config is a JS module that exports an object, an array of objects (multi-compiler), a function, or a Promise.
 
@@ -179,7 +139,7 @@ module.exports = {
 };
 ```
 
-### Config formats
+##### Config formats
 
 ```js
 // 1. Function (receives env and argv)
@@ -198,7 +158,7 @@ module.exports = \[
 module.exports = async () => ({ /\* ... \*/ });
 ```
 
-### TypeScript config
+##### TypeScript config
 
 Name the file `webpack.config.ts` (requires `ts-node` and `@types/webpack`/`@types/node`):
 
@@ -208,13 +168,13 @@ const config: Configuration = { mode: 'production', entry: './src/index.ts' };
 export default config;
 ```
 
-### ESM config
+##### ESM config
 
 Use `webpack.config.mjs` or `"type": "module"` in `package.json`.
 
 \---
 
-## 5\. Entry Points
+#### 5\. Entry Points
 
 ```js
 // Single entry
@@ -250,7 +210,7 @@ entry: () => ({ app: './src/app.js' })
 
 \---
 
-## 6\. Output
+#### 6\. Output
 
 ```js
 output: {
@@ -267,7 +227,7 @@ output: {
 }
 ```
 
-### Placeholders
+##### Placeholders
 
 |Placeholder|Meaning|
 |-|-|
@@ -280,7 +240,7 @@ output: {
 |`\[query]`|Query string|
 |`\[file]`, `\[path]`, `\[base]`|Path pieces (asset modules)|
 
-### publicPath
+##### publicPath
 
 The URL prefix Webpack uses to load lazy chunks and assets at runtime.
 
@@ -288,7 +248,7 @@ The URL prefix Webpack uses to load lazy chunks and assets at runtime.
 * Set it to a CDN URL for production.
 * You can set it at runtime with `\_\_webpack\_public\_path\_\_ = '...'`.
 
-### Building a library
+##### Building a library
 
 ```js
 output: {
@@ -303,7 +263,7 @@ Library types: `var`, `window`, `commonjs2`, `amd`, `umd`, `module` (needs `expe
 
 \---
 
-## 7\. Mode and Environment-Specific Configs
+#### 7\. Mode and Environment-Specific Configs
 
 |Mode|Behavior|
 |-|-|
@@ -311,7 +271,7 @@ Library types: `var`, `window`, `commonjs2`, `amd`, `umd`, `module` (needs `expe
 |`production`|Minification (Terser), tree shaking, scope hoisting, deterministic IDs, `NODE\_ENV='production'`|
 |`none`|No defaults|
 
-### Splitting configs by environment
+##### Splitting configs by environment
 
 ```
 webpack.common.js
@@ -334,7 +294,7 @@ Run: `webpack --config webpack.prod.js`.
 
 \---
 
-## 8\. Loaders
+#### 8\. Loaders
 
 Loaders are functions that **transform source files** before they are added to the graph. They run **right to left / bottom to top** in a rule's `use` array.
 
@@ -355,7 +315,7 @@ module: {
 }
 ```
 
-### Rule options
+##### Rule options
 
 |Option|Description|
 |-|-|
@@ -369,7 +329,7 @@ module: {
 |`sideEffects`|Per-rule side effect flag|
 |`parser`, `generator`|Per-type configuration|
 
-### Essential loaders
+##### Essential loaders
 
 |Loader|Purpose|
 |-|-|
@@ -384,7 +344,7 @@ module: {
 |`html-loader`|Parse HTML for asset references|
 |`raw-loader`, `svgr/webpack`|Raw file contents, SVG to React components|
 
-### Babel example
+##### Babel example
 
 ```js
 {
@@ -404,7 +364,7 @@ module: {
 }
 ```
 
-### CSS Modules
+##### CSS Modules
 
 ```js
 {
@@ -416,7 +376,7 @@ module: {
 }
 ```
 
-### Inline loaders (rarely used)
+##### Inline loaders (rarely used)
 
 ```js
 import txt from '!!raw-loader!./file.txt';  // !! disables all configured loaders
@@ -424,7 +384,7 @@ import txt from '!!raw-loader!./file.txt';  // !! disables all configured loader
 
 \---
 
-## 9\. Asset Modules
+#### 9\. Asset Modules
 
 Webpack 5 handles assets natively with `type: 'asset/\*'`, replacing `file-loader`, `url-loader`, and `raw-loader`.
 
@@ -454,7 +414,7 @@ Also supports the `new URL('./img.png', import.meta.url)` syntax.
 
 \---
 
-## 10\. Plugins
+#### 10\. Plugins
 
 Plugins are classes with an `apply(compiler)` method that tap into hooks. They can do things loaders cannot: bundle optimization, asset management, env injection, and more.
 
@@ -466,7 +426,7 @@ plugins: \[
 ]
 ```
 
-### Must-know plugins
+##### Must-know plugins
 
 |Plugin|Purpose|
 |-|-|
@@ -490,7 +450,7 @@ plugins: \[
 |`ProgressPlugin`|Progress reporting|
 |`SourceMapDevToolPlugin`|Fine-grained source map control|
 
-### Examples
+##### Examples
 
 ```js
 new webpack.DefinePlugin({
@@ -510,7 +470,7 @@ new webpack.ProvidePlugin({ $: 'jquery', React: 'react' });
 
 \---
 
-## 11\. Module Resolution
+#### 11\. Module Resolution
 
 ```js
 resolve: {
@@ -529,14 +489,14 @@ resolve: {
 }
 ```
 
-### Resolution rules
+##### Resolution rules
 
 * **Relative / absolute paths** (`./a`, `/a`): resolved directly, trying extensions and `index` files.
 * **Bare specifiers** (`lodash`): looked up in `resolve.modules`, using the package's `exports` field first (Webpack 5), then `mainFields`.
 * **`exports` / `imports` fields** (Node conditional exports) are honored by v5.
 * Keep `tsconfig.json` `paths` and Webpack `alias` in sync (or use `tsconfig-paths-webpack-plugin`).
 
-### Node polyfills in v5
+##### Node polyfills in v5
 
 Webpack 5 **no longer auto-polyfills Node core modules** (`crypto`, `buffer`, `stream`, `path`...). Use `resolve.fallback`, `ProvidePlugin` for `Buffer`/`process`, or set `false` to ignore:
 
@@ -547,7 +507,7 @@ plugins: \[new webpack.ProvidePlugin({ Buffer: \['buffer', 'Buffer'], process: '
 
 \---
 
-## 12\. Dev Server and Hot Module Replacement
+#### 12\. Dev Server and Hot Module Replacement
 
 ```js
 devServer: {
@@ -568,7 +528,7 @@ devServer: {
 * `webpack-dev-server` builds **in memory** and serves via Express middleware + WebSocket for live reload.
 * **HMR** swaps changed modules without a full reload, keeping application state.
 
-### HMR API
+##### HMR API
 
 ```js
 if (module.hot) {
@@ -580,14 +540,14 @@ if (module.hot) {
 
 Framework tools abstract this: `style-loader` (CSS HMR), React Fast Refresh, `vue-loader`.
 
-### Alternatives
+##### Alternatives
 
 * `webpack-dev-middleware` + `webpack-hot-middleware` for custom Express servers.
 * `webpack --watch` for rebuild-on-change without a server.
 
 \---
 
-## 13\. Source Maps (devtool)
+#### 13\. Source Maps (devtool)
 
 |devtool|Build|Rebuild|Quality|Use|
 |-|-|-|-|-|
@@ -603,15 +563,15 @@ Rule of thumb: dev uses `eval-cheap-module-source-map`, prod uses `source-map` o
 
 \---
 
-## 14\. Code Splitting
+#### 14\. Code Splitting
 
 Three approaches:
 
-### 1\. Entry points
+##### 1\. Entry points
 
 Manual; shared code may be duplicated unless using `dependOn` or `splitChunks`.
 
-### 2\. Dynamic imports (lazy loading)
+##### 2\. Dynamic imports (lazy loading)
 
 ```js
 button.addEventListener('click', async () => {
@@ -627,7 +587,7 @@ const Settings = React.lazy(() => import('./Settings'));
 <Suspense fallback={<Spinner />}><Settings /></Suspense>
 ```
 
-### Magic comments
+##### Magic comments
 
 ```js
 import(
@@ -641,7 +601,7 @@ import(
 );
 ```
 
-### 3\. SplitChunksPlugin (`optimization.splitChunks`)
+##### 3\. SplitChunksPlugin (`optimization.splitChunks`)
 
 ```js
 optimization: {
@@ -675,11 +635,11 @@ Default conditions for creating a new chunk: shared or from `node\_modules`, lar
 
 \---
 
-## 15\. Tree Shaking and Dead Code Elimination
+#### 15\. Tree Shaking and Dead Code Elimination
 
 Tree shaking removes **unused exports**. It relies on **static ESM** (`import`/`export`).
 
-### Requirements
+##### Requirements
 
 1. Use **ES modules**, not CommonJS (`require`), for shakeable code.
 2. Don't let Babel convert ESM to CJS: `@babel/preset-env` with `modules: false`.
@@ -697,14 +657,14 @@ Tree shaking removes **unused exports**. It relies on **static ESM** (`import`/`
 }
 ```
 
-### How it works
+##### How it works
 
 1. `optimization.usedExports` marks unused exports (adds `/\* unused harmony export \*/` comments).
 2. `optimization.sideEffects` skips whole modules when none of their exports are used and they are flagged side-effect-free.
 3. Terser removes the dead code.
 4. `optimization.concatenateModules` (scope hoisting) merges modules into one scope for smaller, faster code.
 
-### Tips
+##### Tips
 
 * `import { debounce } from 'lodash-es'` is shakeable; `import \_ from 'lodash'` is not.
 * Avoid barrel files (`index.js` re-exporting everything) unless `sideEffects: false` is correct.
@@ -713,9 +673,9 @@ Tree shaking removes **unused exports**. It relies on **static ESM** (`import`/`
 
 \---
 
-## 16\. Caching and Long-Term Caching
+#### 16\. Caching and Long-Term Caching
 
-### Browser caching strategy
+##### Browser caching strategy
 
 Serve hashed files with `Cache-Control: max-age=31536000, immutable`, and serve `index.html` with no-cache.
 
@@ -735,7 +695,7 @@ Why hashes change unexpectedly:
 * Runtime code embedded in the entry (fix with `runtimeChunk`).
 * Adding or removing modules from the vendor chunk.
 
-### Build cache (persistent, Webpack 5)
+##### Build cache (persistent, Webpack 5)
 
 ```js
 cache: {
@@ -750,7 +710,7 @@ Typically gives big speedups on second builds (often several times faster). In C
 
 \---
 
-## 17\. Build Performance Optimization
+#### 17\. Build Performance Optimization
 
 |Technique|Notes|
 |-|-|
@@ -772,9 +732,9 @@ Typically gives big speedups on second builds (often several times faster). In C
 
 \---
 
-## 18\. Bundle Size Optimization and Analysis
+#### 18\. Bundle Size Optimization and Analysis
 
-### Analysis
+##### Analysis
 
 ```bash
 webpack --profile --json=stats.json
@@ -787,7 +747,7 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 plugins: \[new BundleAnalyzerPlugin({ analyzerMode: 'static', openAnalyzer: false })]
 ```
 
-### Techniques
+##### Techniques
 
 * **Code splitting and lazy routes**
 * **Tree shaking** (ESM libs, `sideEffects`)
@@ -817,7 +777,7 @@ performance: { hints: 'warning', maxAssetSize: 250000, maxEntrypointSize: 400000
 
 \---
 
-## 19\. Externals
+#### 19\. Externals
 
 Exclude dependencies from the bundle and expect them at runtime (CDN, global, or Node `require`).
 
@@ -834,7 +794,7 @@ externals: {
 
 \---
 
-## 20\. Targets, Browserslist and Polyfills
+#### 20\. Targets, Browserslist and Polyfills
 
 ```js
 target: 'web',            // default for browsers; also 'webworker', 'node', 'electron-main', 'electron-renderer', 'async-node'
@@ -856,7 +816,7 @@ not dead
 
 \---
 
-## 21\. Module Federation (Micro-Frontends)
+#### 21\. Module Federation (Micro-Frontends)
 
 Introduced in Webpack 5. Lets separately built and deployed applications **share modules at runtime**.
 
@@ -891,15 +851,15 @@ Key concepts:
 
 \---
 
-## 22\. Web Workers, WebAssembly and Special Modules
+#### 22\. Web Workers, WebAssembly and Special Modules
 
-### Web Workers (no loader needed in v5)
+##### Web Workers (no loader needed in v5)
 
 ```js
 const worker = new Worker(new URL('./worker.js', import.meta.url));
 ```
 
-### WebAssembly
+##### WebAssembly
 
 ```js
 experiments: { asyncWebAssembly: true },
@@ -910,7 +870,7 @@ module: { rules: \[{ test: /\\.wasm$/, type: 'webassembly/async' }] }
 const { add } = await import('./math.wasm');
 ```
 
-### Other features
+##### Other features
 
 |Feature|Detail|
 |-|-|
@@ -926,7 +886,7 @@ const { add } = await import('./math.wasm');
 
 \---
 
-## 23\. Writing a Custom Loader
+#### 23\. Writing a Custom Loader
 
 A loader is a function that receives source and returns transformed source.
 
@@ -964,7 +924,7 @@ Guidelines: keep loaders single-purpose, stateless, cacheable, and chainable. Re
 
 \---
 
-## 24\. Writing a Custom Plugin
+#### 24\. Writing a Custom Plugin
 
 ```js
 class FileListPlugin {
@@ -983,7 +943,7 @@ class FileListPlugin {
 module.exports = FileListPlugin;
 ```
 
-### Hook types (Tapable)
+##### Hook types (Tapable)
 
 |Method|Use|
 |-|-|
@@ -993,7 +953,7 @@ module.exports = FileListPlugin;
 
 Hook kinds: `SyncHook`, `SyncBailHook`, `SyncWaterfallHook`, `AsyncSeriesHook`, `AsyncParallelHook`, etc.
 
-### Important hooks
+##### Important hooks
 
 **Compiler**: `environment`, `initialize`, `beforeRun`, `run`, `watchRun`, `beforeCompile`, `compile`, `thisCompilation`, `compilation`, `make`, `afterCompile`, `emit`, `afterEmit`, `done`, `failed`.
 
@@ -1001,9 +961,9 @@ Hook kinds: `SyncHook`, `SyncBailHook`, `SyncWaterfallHook`, `AsyncSeriesHook`, 
 
 \---
 
-## 25\. How Webpack Works Internally
+#### 25\. How Webpack Works Internally
 
-### Build lifecycle
+##### Build lifecycle
 
 1. **Initialize**: read config, create `Compiler`, apply plugins (`plugin.apply(compiler)`), register built-in plugins based on options.
 2. **Make (build graph)**: starting from entries, the `Compilation`:
@@ -1015,12 +975,12 @@ Hook kinds: `SyncHook`, `SyncBailHook`, `SyncWaterfallHook`, `AsyncSeriesHook`, 
 3. **Seal (optimize)**: build the **chunk graph**; run optimizations: tree shaking flags, `SplitChunks`, module concatenation, ID assignment, hashing.
 4. **Emit**: generate code for each chunk (runtime + module wrappers), run `processAssets` hooks (minification, compression), write files.
 
-### Compiler vs Compilation
+##### Compiler vs Compilation
 
 * **Compiler**: single instance for the whole lifetime of the build process; holds config, filesystem, top-level hooks.
 * **Compilation**: represents one build of the module graph; a new one is created on each rebuild in watch mode; holds modules, chunks, assets.
 
-### Output bundle anatomy (simplified)
+##### Output bundle anatomy (simplified)
 
 ```js
 (() => {
@@ -1041,15 +1001,15 @@ Hook kinds: `SyncHook`, `SyncBailHook`, `SyncWaterfallHook`, `AsyncSeriesHook`, 
 
 Runtime pieces: module registry, `\_\_webpack\_require\_\_`, chunk loading (JSONP / `import()` / `require`), HMR runtime, and public path helpers.
 
-### Key internal packages
+##### Key internal packages
 
 `tapable` (hooks), `enhanced-resolve` (resolution), `acorn` (parsing), `webpack-sources` (source abstraction), `schema-utils` (option validation), `watchpack` (file watching), `loader-runner` (executes loaders).
 
 \---
 
-## 26\. Common Framework Setups
+#### 26\. Common Framework Setups
 
-### React + TypeScript
+##### React + TypeScript
 
 ```js
 module.exports = {
@@ -1066,11 +1026,11 @@ module.exports = {
 };
 ```
 
-### Vue
+##### Vue
 
 Use `vue-loader` and its `VueLoaderPlugin`; supports SFCs, scoped CSS, and HMR.
 
-### Node.js / SSR server bundle
+##### Node.js / SSR server bundle
 
 ```js
 target: 'node',
@@ -1079,7 +1039,7 @@ output: { libraryTarget: 'commonjs2' },
 node: { \_\_dirname: false },
 ```
 
-### Multi-page application
+##### Multi-page application
 
 ```js
 entry: { home: './src/home.js', about: './src/about.js' },
@@ -1093,7 +1053,7 @@ plugins: \[
 
 \---
 
-## 27\. Environment Variables
+#### 27\. Environment Variables
 
 Two different things:
 
@@ -1117,7 +1077,7 @@ Important: `mode` sets `process.env.NODE\_ENV` for **your code** automatically. 
 
 \---
 
-## 28\. Debugging and Troubleshooting
+#### 28\. Debugging and Troubleshooting
 
 |Symptom|Likely cause / fix|
 |-|-|
@@ -1134,7 +1094,7 @@ Important: `mode` sets `process.env.NODE\_ENV` for **your code** automatically. 
 |Duplicate React instance|Different versions in tree; use `resolve.alias` or `singleton` in federation|
 |Works in dev, breaks in prod|Minification, tree shaking with wrong `sideEffects`, `NODE\_ENV` branches|
 
-### Debugging tools
+##### Debugging tools
 
 ```bash
 webpack --stats verbose
@@ -1149,7 +1109,7 @@ Use `stats: { modules: true, reasons: true, usedExports: true, providedExports: 
 
 \---
 
-## 29\. Production Checklist
+#### 29\. Production Checklist
 
 * \[ ] `mode: 'production'`
 * \[ ] `\[contenthash]` filenames; `output.clean: true`
@@ -1172,7 +1132,7 @@ Use `stats: { modules: true, reasons: true, usedExports: true, providedExports: 
 
 \---
 
-## 30\. Migrating from Webpack 4 to 5
+#### 30\. Migrating from Webpack 4 to 5
 
 |Change|Action|
 |-|-|
@@ -1194,7 +1154,7 @@ Migration approach: upgrade Webpack, loaders, and plugins together; fix deprecat
 
 \---
 
-## 31\. Webpack vs Other Bundlers
+#### 31\. Webpack vs Other Bundlers
 
 |Tool|Strengths|Trade-offs|
 |-|-|-|
@@ -1211,7 +1171,7 @@ Choose Webpack when you need ecosystem breadth, Module Federation, custom pipeli
 
 \---
 
-## 32\. Interview Questions and Answers
+#### 32\. Interview Questions and Answers
 
 **1. What is Webpack?**
 A static module bundler that builds a dependency graph from entry points and emits optimized bundles.
@@ -1275,7 +1235,7 @@ Import order across chunks plus `MiniCssExtractPlugin`; solve by consistent impo
 
 \---
 
-## 33\. Resources
+#### 33\. Resources
 
 * Official docs: https://webpack.js.org
 * Concepts: https://webpack.js.org/concepts/
@@ -1290,4 +1250,3 @@ Import order across chunks plus `MiniCssExtractPlugin`; solve by consistent impo
 \---
 
 > \*\*Tip:\*\* Treat Webpack config as code. Keep it small, split by environment, comment non-obvious choices, and measure (build time, bundle size, Core Web Vitals) before and after every optimization.
-

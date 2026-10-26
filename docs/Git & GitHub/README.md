@@ -1,37 +1,8 @@
-# Git & GitHub: The SDE-1 Handbook
+# Git & GitHub
 
 A practical guide to everything an entry-level software engineer needs to know about Git and GitHub: concepts, commands, workflows, and the mistakes to avoid.
 
----
-
-## Table of Contents
-
-1. [Git vs GitHub](#1-git-vs-github)
-2. [Installation & Setup](#2-installation--setup)
-3. [Core Concepts](#3-core-concepts)
-4. [Starting a Repository](#4-starting-a-repository)
-5. [Daily Workflow: Stage, Commit, Inspect](#5-daily-workflow-stage-commit-inspect)
-6. [Branching](#6-branching)
-7. [Merging & Rebasing](#7-merging--rebasing)
-8. [Resolving Merge Conflicts](#8-resolving-merge-conflicts)
-9. [Working with Remotes](#9-working-with-remotes)
-10. [Undoing Things](#10-undoing-things)
-11. [Stash](#11-stash)
-12. [Tags & Releases](#12-tags--releases)
-13. [Advanced Tools](#13-advanced-tools)
-14. [.gitignore](#14-gitignore)
-15. [GitHub Essentials](#15-github-essentials)
-16. [Pull Request Workflow](#16-pull-request-workflow)
-17. [GitHub Actions (CI/CD)](#17-github-actions-cicd)
-18. [Branching Strategies](#18-branching-strategies)
-19. [Commit Message Conventions](#19-commit-message-conventions)
-20. [Best Practices & Common Pitfalls](#20-best-practices--common-pitfalls)
-21. [Troubleshooting Scenarios](#21-troubleshooting-scenarios)
-22. [Quick Cheat Sheet](#22-quick-cheat-sheet)
-
----
-
-## 1. Git vs GitHub
+#### 1. Git vs GitHub
 
 | | **Git** | **GitHub** |
 |---|---|---|
@@ -44,7 +15,7 @@ A practical guide to everything an entry-level software engineer needs to know a
 
 ---
 
-## 2. Installation & Setup
+#### 2. Installation & Setup
 
 ```bash
 # Install
@@ -55,7 +26,7 @@ winget install Git.Git        # Windows
 git --version                 # Verify
 ```
 
-### One-time configuration
+##### One-time configuration
 
 ```bash
 git config --global user.name "Your Name"
@@ -70,7 +41,7 @@ git config user.name                              # View a single value
 
 Config levels: `--system` (all users) → `--global` (your user) → `--local` (this repo only; default).
 
-### SSH authentication with GitHub (recommended)
+##### SSH authentication with GitHub (recommended)
 
 ```bash
 ssh-keygen -t ed25519 -C "you@example.com"        # Generate key
@@ -83,16 +54,16 @@ ssh -T git@github.com                             # Test connection
 
 ---
 
-## 3. Core Concepts
+#### 3. Core Concepts
 
-### The three areas
+##### The three areas
 
 ```
 Working Directory  ──git add──▶  Staging Area (Index)  ──git commit──▶  Local Repository  ──git push──▶  Remote (GitHub)
    (your files)                   (what goes in next commit)           (.git history)
 ```
 
-### Key terms
+##### Key terms
 
 | Term | Meaning |
 |---|---|
@@ -106,13 +77,13 @@ Working Directory  ──git add──▶  Staging Area (Index)  ──git commi
 | **Fork** | Your own server-side copy of someone else's repo |
 | **Detached HEAD** | HEAD points to a commit directly, not a branch |
 
-### File states
+##### File states
 
 `Untracked` → `Staged` → `Committed` → `Modified` → `Staged` → ...
 
 ---
 
-## 4. Starting a Repository
+#### 4. Starting a Repository
 
 ```bash
 git init                                   # Create a new repo in current folder
@@ -126,9 +97,9 @@ git clone -b <branch> <url>                # Clone a specific branch
 
 ---
 
-## 5. Daily Workflow: Stage, Commit, Inspect
+#### 5. Daily Workflow: Stage, Commit, Inspect
 
-### Check status and differences
+##### Check status and differences
 
 ```bash
 git status                       # Current state of working dir and staging area
@@ -139,7 +110,7 @@ git diff main..feature           # Compare two branches
 git diff <commit1> <commit2>     # Compare two commits
 ```
 
-### Stage changes
+##### Stage changes
 
 ```bash
 git add file.txt                 # Stage a file
@@ -151,7 +122,7 @@ git rm --cached file.txt         # Untrack file but keep it on disk
 git mv old.txt new.txt           # Rename/move and stage
 ```
 
-### Commit
+##### Commit
 
 ```bash
 git commit -m "Add login validation"          # Commit with message
@@ -160,7 +131,7 @@ git commit --amend -m "Better message"        # Rewrite the last commit message
 git commit --amend --no-edit                  # Add staged changes to the last commit
 ```
 
-### View history
+##### View history
 
 ```bash
 git log                                       # Full history
@@ -177,7 +148,7 @@ git blame file.txt                            # Who last changed each line
 
 ---
 
-## 6. Branching
+#### 6. Branching
 
 Branches let you work on features or fixes in isolation without touching `main`.
 
@@ -198,11 +169,11 @@ git push origin --delete feature/login   # Delete remote branch
 
 ---
 
-## 7. Merging & Rebasing
+#### 7. Merging & Rebasing
 
 Both integrate changes from one branch into another, differently.
 
-### Merge
+##### Merge
 
 ```bash
 git switch main
@@ -215,7 +186,7 @@ git merge --abort                   # Cancel an in-progress merge
 - **Fast-forward**: main hasn't moved, so Git just advances the pointer (no merge commit).
 - **Three-way merge**: both branches diverged, so Git creates a merge commit.
 
-### Rebase
+##### Rebase
 
 Replays your commits on top of another branch for a **linear history**.
 
@@ -229,7 +200,7 @@ git rebase -i HEAD~3                # Interactive: squash, reword, reorder, drop
 
 Interactive rebase keywords: `pick`, `reword`, `edit`, `squash`, `fixup`, `drop`.
 
-### Merge vs Rebase
+##### Merge vs Rebase
 
 | | Merge | Rebase |
 |---|---|---|
@@ -241,7 +212,7 @@ Interactive rebase keywords: `pick`, `reword`, `edit`, `squash`, `fixup`, `drop`
 
 ---
 
-## 8. Resolving Merge Conflicts
+#### 8. Resolving Merge Conflicts
 
 Conflicts occur when two branches edit the same lines.
 
@@ -270,7 +241,7 @@ git mergetool                       # Launch a configured merge tool
 
 ---
 
-## 9. Working with Remotes
+#### 9. Working with Remotes
 
 ```bash
 git remote -v                                   # List remotes
@@ -288,7 +259,7 @@ git push                                        # Push to the tracked upstream
 git push --force-with-lease                     # Safer force push (fails if remote changed)
 ```
 
-### Fork workflow (open source)
+##### Fork workflow (open source)
 
 ```bash
 git remote add upstream <original-repo-url>     # Link the original repo
@@ -302,7 +273,7 @@ git push origin main
 
 ---
 
-## 10. Undoing Things
+#### 10. Undoing Things
 
 Choose the right tool depending on **what** you want to undo.
 
@@ -317,7 +288,7 @@ Choose the right tool depending on **what** you want to undo.
 | Undo a **pushed** commit safely | `git revert <commit>` |
 | Remove untracked files | `git clean -fd` ⚠️ (preview first with `-n`) |
 
-### Reset vs Revert
+##### Reset vs Revert
 
 - **`git reset`** moves the branch pointer back, **rewriting history**. Use only on local, unpushed commits.
 - **`git revert`** creates a **new commit** that reverses an earlier one. Safe for shared branches.
@@ -328,7 +299,7 @@ git revert -m 1 <merge-commit>      # Revert a merge commit
 git reset --hard origin/main        # Make local branch match remote exactly ⚠️
 ```
 
-### Recover "lost" work
+##### Recover "lost" work
 
 ```bash
 git reflog                          # History of where HEAD has been (even after reset)
@@ -339,7 +310,7 @@ git reset --hard <hash-from-reflog> # Restore to that state
 
 ---
 
-## 11. Stash
+#### 11. Stash
 
 Temporarily shelve uncommitted changes to switch context.
 
@@ -358,7 +329,7 @@ git stash branch new-branch         # Create a branch from a stash
 
 ---
 
-## 12. Tags & Releases
+#### 12. Tags & Releases
 
 Tags mark specific commits, usually release versions (use [Semantic Versioning](https://semver.org): `MAJOR.MINOR.PATCH`).
 
@@ -376,9 +347,9 @@ git checkout v1.0.0                 # Inspect code at a tag (detached HEAD)
 
 ---
 
-## 13. Advanced Tools
+#### 13. Advanced Tools
 
-### Cherry-pick: apply a specific commit to the current branch
+##### Cherry-pick: apply a specific commit to the current branch
 
 ```bash
 git cherry-pick <commit>
@@ -386,7 +357,7 @@ git cherry-pick A..B                # A range of commits (A exclusive)
 git cherry-pick --abort
 ```
 
-### Bisect: binary search to find the commit that introduced a bug
+##### Bisect: binary search to find the commit that introduced a bug
 
 ```bash
 git bisect start
@@ -396,7 +367,7 @@ git bisect good <known-good-commit>
 git bisect reset                    # Exit bisect
 ```
 
-### Worktrees: multiple branches checked out in separate folders
+##### Worktrees: multiple branches checked out in separate folders
 
 ```bash
 git worktree add ../hotfix hotfix-branch
@@ -404,18 +375,18 @@ git worktree list
 git worktree remove ../hotfix
 ```
 
-### Submodules: embed another repo inside yours
+##### Submodules: embed another repo inside yours
 
 ```bash
 git submodule add <url> path/
 git submodule update --init --recursive
 ```
 
-### Hooks: scripts that run on Git events
+##### Hooks: scripts that run on Git events
 
 Located in `.git/hooks/` (e.g., `pre-commit`, `commit-msg`, `pre-push`). Share them via tools like **Husky** or **pre-commit**.
 
-### Aliases: save keystrokes
+##### Aliases: save keystrokes
 
 ```bash
 git config --global alias.st status
@@ -423,7 +394,7 @@ git config --global alias.co checkout
 git config --global alias.lg "log --oneline --graph --all --decorate"
 ```
 
-### Searching
+##### Searching
 
 ```bash
 git grep "TODO"                     # Search tracked files
@@ -432,7 +403,7 @@ git log -S "functionName"           # Find commits that added/removed a string
 
 ---
 
-## 14. .gitignore
+#### 14. .gitignore
 
 Tells Git which files to **not** track (build output, secrets, dependencies, OS/IDE files).
 
@@ -467,7 +438,7 @@ build/
 
 ---
 
-## 15. GitHub Essentials
+#### 15. GitHub Essentials
 
 | Feature | Purpose |
 |---|---|
@@ -482,7 +453,7 @@ build/
 | **Wiki** | Extra documentation |
 | **Security** | Dependabot alerts, secret scanning, code scanning |
 
-### Useful repo files
+##### Useful repo files
 
 - `README.md`: overview, setup, usage
 - `LICENSE`: terms of use (MIT, Apache-2.0, GPL...)
@@ -491,16 +462,16 @@ build/
 - `CODEOWNERS`: auto-assigns reviewers by file path
 - `.github/PULL_REQUEST_TEMPLATE.md` and `.github/ISSUE_TEMPLATE/`
 
-### Linking issues and PRs
+##### Linking issues and PRs
 
 In a PR description or commit message, these keywords auto-close an issue on merge:
 `Closes #42`, `Fixes #42`, `Resolves #42`
 
-### Branch protection (Settings → Branches)
+##### Branch protection (Settings → Branches)
 
 Typical rules for `main`: require PR + approvals, require passing status checks, require up-to-date branches, block force pushes, require signed commits.
 
-### GitHub CLI (`gh`)
+##### GitHub CLI (`gh`)
 
 ```bash
 gh auth login
@@ -519,7 +490,7 @@ gh run watch
 
 ---
 
-## 16. Pull Request Workflow
+#### 16. Pull Request Workflow
 
 The standard flow on a team:
 
@@ -547,7 +518,7 @@ git switch main && git pull
 git branch -d feature/add-search
 ```
 
-### Merge options on GitHub
+##### Merge options on GitHub
 
 | Option | Result | Best for |
 |---|---|---|
@@ -555,7 +526,7 @@ git branch -d feature/add-search
 | **Squash and merge** | All commits collapse into one | Clean `main`, messy feature branches |
 | **Rebase and merge** | Commits replayed linearly, no merge commit | Linear history with meaningful commits |
 
-### Writing a good PR
+##### Writing a good PR
 
 - Small and focused: ideally under ~400 lines changed
 - Descriptive title; explain **what** and **why**; link the issue
@@ -563,7 +534,7 @@ git branch -d feature/add-search
 - Self-review your diff before requesting review
 - Use **Draft PR** for work in progress
 
-### Reviewing code
+##### Reviewing code
 
 - Be specific, kind, and constructive; ask questions rather than demand changes
 - Check correctness, readability, edge cases, tests, security, performance
@@ -572,7 +543,7 @@ git branch -d feature/add-search
 
 ---
 
-## 17. GitHub Actions (CI/CD)
+#### 17. GitHub Actions (CI/CD)
 
 Automate tests, builds, and deployments. Workflows are YAML files in `.github/workflows/`.
 
@@ -606,7 +577,7 @@ Store sensitive values in **Settings → Secrets and variables → Actions**, ne
 
 ---
 
-## 18. Branching Strategies
+#### 18. Branching Strategies
 
 | Strategy | Description | Best for |
 |---|---|---|
@@ -614,7 +585,7 @@ Store sensitive values in **Settings → Secrets and variables → Actions**, ne
 | **Trunk-Based Development** | Tiny commits to `main`/short branches; feature flags | High-velocity teams with strong CI |
 | **Git Flow** | `main`, `develop`, `feature/*`, `release/*`, `hotfix/*` | Scheduled releases, versioned software |
 
-### Branch naming
+##### Branch naming
 
 ```
 feature/user-authentication
@@ -626,7 +597,7 @@ docs/api-readme
 
 ---
 
-## 19. Commit Message Conventions
+#### 19. Commit Message Conventions
 
 A commit message tells future readers **why** a change was made.
 
@@ -667,9 +638,9 @@ docs: add setup instructions to README
 
 ---
 
-## 20. Best Practices & Common Pitfalls
+#### 20. Best Practices & Common Pitfalls
 
-### Do
+##### Do
 
 - Commit **small, atomic, logical** changes
 - Pull/rebase from `main` often to avoid giant conflicts
@@ -681,7 +652,7 @@ docs: add setup instructions to README
 - Run tests/linters locally (pre-commit hooks) before pushing
 - Sign commits where required (`git config --global commit.gpgsign true`)
 
-### Don't
+##### Don't
 
 - ❌ Commit secrets, API keys, `.env`, or large binaries
 - ❌ Force-push to shared branches
@@ -691,7 +662,7 @@ docs: add setup instructions to README
 - ❌ Leave PRs open for weeks without updates
 - ❌ Panic: almost everything is recoverable (`git reflog`)
 
-### Large files
+##### Large files
 
 Use **Git LFS** for large binaries (images, datasets, models):
 
@@ -703,7 +674,7 @@ git add .gitattributes
 
 ---
 
-## 21. Troubleshooting Scenarios
+#### 21. Troubleshooting Scenarios
 
 **Committed to the wrong branch**
 ```bash
@@ -766,11 +737,9 @@ git commit --amend --author="Name <email@example.com>" --no-edit
 git config --global core.autocrlf true    # Windows
 git config --global core.autocrlf input   # macOS/Linux
 ```
-
 ---
 
-## 22. Quick Cheat Sheet
-
+#### 22. Quick Cheat Sheet
 ```bash
 # SETUP
 git config --global user.name "Name"        git config --global user.email "e@x.com"
@@ -803,10 +772,9 @@ git cherry-pick <commit>                    git bisect start|good|bad|reset
 gh pr create --fill                         gh pr checkout <n>
 gh pr merge <n> --squash                    gh issue create
 ```
-
 ---
 
-## Further Learning
+#### Further Learning
 
 - [Pro Git Book](https://git-scm.com/book): free, official, comprehensive
 - [Learn Git Branching](https://learngitbranching.js.org): interactive visual tutorial

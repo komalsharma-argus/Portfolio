@@ -1,41 +1,10 @@
-# Yarn: The Complete Engineer's Guide (and How It Compares to npm)
+# Yarn: Complete Guide
 
 A practical, in-depth reference for the Yarn package manager: what it is, how it works internally, how to use it day to day, how to run it in CI and monorepos, and how it stacks up against npm (with a short note on pnpm).
 
 > **Version note:** Yarn's feature set differs significantly between **Yarn Classic (1.x)** and **Yarn Berry (2.x, 3.x, 4.x)**. Commands and behaviors below are labeled where they differ. Always check the [official docs](https://yarnpkg.com) for the release you're using, since details change between minor versions.
 
----
-
-## Table of Contents
-
-1. [What Is Yarn?](#1-what-is-yarn)
-2. [History and Versions](#2-history-and-versions)
-3. [Installation and Version Management](#3-installation-and-version-management)
-4. [Core Concepts](#4-core-concepts)
-5. [Command Cheat Sheet (Yarn vs npm)](#5-command-cheat-sheet-yarn-vs-npm)
-6. [Install Strategies: node_modules, PnP, pnpm Linker](#6-install-strategies)
-7. [Plug'n'Play (PnP) in Depth](#7-plugnplay-pnp-in-depth)
-8. [Zero-Installs and the Offline Cache](#8-zero-installs-and-the-offline-cache)
-9. [The Lockfile](#9-the-lockfile)
-10. [Configuration (`.yarnrc.yml`)](#10-configuration-yarnrcyml)
-11. [Dependency Protocols and Resolution Control](#11-dependency-protocols-and-resolution-control)
-12. [Workspaces and Monorepos](#12-workspaces-and-monorepos)
-13. [Scripts, Binaries, and Running Tools](#13-scripts-binaries-and-running-tools)
-14. [Plugins and Constraints](#14-plugins-and-constraints)
-15. [Security](#15-security)
-16. [CI/CD Usage](#16-cicd-usage)
-17. [Publishing Packages](#17-publishing-packages)
-18. [Yarn vs npm: Detailed Comparison](#18-yarn-vs-npm-detailed-comparison)
-19. [Yarn vs npm vs pnpm (Quick View)](#19-yarn-vs-npm-vs-pnpm-quick-view)
-20. [Migration Guides](#20-migration-guides)
-21. [Best Practices](#21-best-practices)
-22. [Troubleshooting](#22-troubleshooting)
-23. [Decision Guide](#23-decision-guide)
-24. [Resources](#24-resources)
-
----
-
-## 1. What Is Yarn?
+#### 1. What Is Yarn?
 
 Yarn is a package manager for JavaScript and TypeScript projects. It installs, updates, and removes dependencies declared in `package.json`, resolves the full dependency tree, records exact resolved versions in a lockfile, and runs project scripts. It is compatible with the **npm registry** (`registry.npmjs.org`), so every package published to npm is installable with Yarn.
 
@@ -48,7 +17,7 @@ Core promises:
 
 ---
 
-## 2. History and Versions
+#### 2. History and Versions
 
 | Era | Name | Version | Status |
 |---|---|---|---|
@@ -67,9 +36,9 @@ Background:
 
 ---
 
-## 3. Installation and Version Management
+#### 3. Installation and Version Management
 
-### Recommended: Corepack
+##### Recommended: Corepack
 
 [Corepack](https://nodejs.org/api/corepack.html) is a tool that manages package manager versions per project. It shipped with Node.js for many releases. Newer Node.js releases (starting with Node 25) no longer bundle it, so you may need to install it yourself.
 
@@ -97,7 +66,7 @@ Pinning happens through the `packageManager` field:
 
 Anyone running `yarn` in the project then automatically gets that exact version, with no global install and no version drift between developers and CI.
 
-### Alternative: `yarn set version`
+##### Alternative: `yarn set version`
 
 From within a project (with any Yarn available):
 
@@ -109,12 +78,12 @@ yarn set version classic     # Yarn 1.x
 
 This downloads the release into `.yarn/releases/` and records it as `yarnPath` in `.yarnrc.yml`. Commit that file so the whole team uses the same version.
 
-### Other options
+##### Other options
 
 - `npm install -g yarn` installs Yarn Classic 1.x (not Berry). Fine for bootstrapping; use `yarn set version` afterward.
 - System packages (Homebrew, apt, Chocolatey) tend to provide Classic and lag behind.
 
-### Verify
+##### Verify
 
 ```bash
 yarn --version
@@ -122,7 +91,7 @@ yarn --version
 
 ---
 
-## 4. Core Concepts
+#### 4. Core Concepts
 
 - **`package.json`**: declares the project, dependencies (`dependencies`, `devDependencies`, `peerDependencies`, `optionalDependencies`), and scripts.
 - **Lockfile (`yarn.lock`)**: records the exact resolved version, checksum, and dependency graph.
@@ -134,9 +103,9 @@ yarn --version
 
 ---
 
-## 5. Command Cheat Sheet (Yarn vs npm)
+#### 5. Command Cheat Sheet (Yarn vs npm)
 
-### Everyday commands
+##### Everyday commands
 
 | Task | Yarn 4 (Berry) | Yarn 1 (Classic) | npm |
 |---|---|---|---|
@@ -166,7 +135,7 @@ yarn --version
 | Rebuild native deps | `yarn rebuild` | `yarn install --force` | `npm rebuild` |
 | Print package manager version | `yarn --version` | `yarn --version` | `npm --version` |
 
-### Yarn-specific commands (Berry)
+##### Yarn-specific commands (Berry)
 
 | Command | Purpose |
 |---|---|
@@ -188,7 +157,7 @@ yarn --version
 
 ---
 
-## 6. Install Strategies
+#### 6. Install Strategies
 
 Yarn's `nodeLinker` setting (in `.yarnrc.yml`) controls how installed packages are exposed to Node.js:
 
@@ -207,9 +176,9 @@ nodeLinker: node-modules
 
 ---
 
-## 7. Plug'n'Play (PnP) in Depth
+#### 7. Plug'n'Play (PnP) in Depth
 
-### How `node_modules` works (and why it's problematic)
+##### How `node_modules` works (and why it's problematic)
 
 Node resolves `require('x')` by walking up the directory tree looking for `node_modules/x`. This implies:
 
@@ -217,7 +186,7 @@ Node resolves `require('x')` by walking up the directory tree looking for `node_
 - Hoisting makes undeclared packages accidentally importable (**phantom dependencies**), causing "works on my machine" bugs.
 - Resolution is a filesystem search at runtime.
 
-### How PnP works
+##### How PnP works
 
 At install time Yarn already knows the entire graph, so it generates a single file, `.pnp.cjs`, containing a static lookup table: *"package A may require package B, located at path P."* Node is patched at runtime (via `--require .pnp.cjs`, handled when you launch through `yarn`) so resolution uses the table.
 
@@ -227,7 +196,7 @@ Benefits:
 - **Speed:** installs write mostly just the lockfile, the cache, and `.pnp.cjs`. Startup resolution avoids filesystem walking.
 - **Smaller footprint:** packages remain as zip files in the cache.
 
-### Practical considerations
+##### Practical considerations
 
 - **Run things through Yarn:** `yarn node script.js`, `yarn tsc`, `yarn jest`. Running bare `node` won't know about PnP.
 - **Editor support:** run `yarn dlx @yarnpkg/sdks vscode` (or `yarn sdks`) so TypeScript/ESLint/Prettier work in your editor.
@@ -253,7 +222,7 @@ Benefits:
 
 ---
 
-## 8. Zero-Installs and the Offline Cache
+#### 8. Zero-Installs and the Offline Cache
 
 Yarn Berry stores every package as a compressed archive in the cache (`.yarn/cache` by default, configurable via `cacheFolder`; or a global cache when `enableGlobalCache: true`).
 
@@ -283,11 +252,11 @@ For zero-installs, also keep `.yarn/cache` and `.pnp.*` tracked (remove them fro
 
 ---
 
-## 9. The Lockfile
+#### 9. The Lockfile
 
 `yarn.lock` is committed to version control.
 
-### Yarn 1 format (custom, indentation-based)
+##### Yarn 1 format (custom, indentation-based)
 
 ```
 lodash@^4.17.21:
@@ -296,7 +265,7 @@ lodash@^4.17.21:
   integrity sha512-...
 ```
 
-### Yarn Berry format (YAML)
+##### Yarn Berry format (YAML)
 
 ```yaml
 __metadata:
@@ -322,7 +291,7 @@ Key points:
 
 ---
 
-## 10. Configuration (`.yarnrc.yml`)
+#### 10. Configuration (`.yarnrc.yml`)
 
 Yarn Berry uses `.yarnrc.yml` (project-level, plus an optional user-level `~/.yarnrc.yml`). Yarn 1 used `.yarnrc` and also read `.npmrc`. **Yarn Berry does not read `.npmrc`** for its own settings (it has its own `npm*` settings).
 
@@ -377,9 +346,9 @@ Notes:
 
 ---
 
-## 11. Dependency Protocols and Resolution Control
+#### 11. Dependency Protocols and Resolution Control
 
-### Protocols (Berry)
+##### Protocols (Berry)
 
 | Protocol | Example | Meaning |
 |---|---|---|
@@ -392,12 +361,12 @@ Notes:
 | `git:` / `github:` | `"pkg": "github:user/repo#semver:^1.2.0"` | Git dependency |
 | `exec:` | `"gen": "exec:./gen.js"` | Generated at install time by a script |
 
-### `workspace:` ranges
+##### `workspace:` ranges
 
 - `workspace:*` always links to the local workspace.
 - `workspace:^` / `workspace:~` get replaced with a real semver range (`^1.2.3`) at **publish/pack** time, so published packages are valid for consumers.
 
-### Forcing versions: `resolutions`
+##### Forcing versions: `resolutions`
 
 ```json
 {
@@ -411,7 +380,7 @@ Notes:
 
 Use to patch vulnerable transitive dependencies. npm's analogue is `overrides`; pnpm uses `pnpm.overrides`. `resolutions` is supported in both Yarn Classic and Berry (syntax is slightly different).
 
-### Patching dependencies
+##### Patching dependencies
 
 ```bash
 yarn patch lodash          # prints a temp folder; edit files there
@@ -420,13 +389,13 @@ yarn patch-commit -s /tmp/xyz   # writes .yarn/patches/*.patch and updates resol
 
 This is built in, so `patch-package` isn't needed.
 
-### Peer dependencies
+##### Peer dependencies
 
 Yarn Berry is strict: a package with unmet peer dependencies will warn, and under PnP an undeclared peer is genuinely unavailable. Use `yarn explain peer-requirements <hash>` to debug.
 
 ---
 
-## 12. Workspaces and Monorepos
+#### 12. Workspaces and Monorepos
 
 Declare workspaces in the root `package.json`:
 
@@ -455,7 +424,7 @@ monorepo/
 
 All workspaces share a **single lockfile** and a deduplicated install.
 
-### Referencing sibling packages
+##### Referencing sibling packages
 
 ```json
 {
@@ -467,7 +436,7 @@ All workspaces share a **single lockfile** and a deduplicated install.
 }
 ```
 
-### Common workspace commands (Berry)
+##### Common workspace commands (Berry)
 
 ```bash
 yarn workspaces list --json                         # discover workspaces
@@ -483,13 +452,13 @@ yarn workspaces focus --production                  # production deps only (e.g.
 
 Related tools often paired with Yarn workspaces: **Turborepo**, **Nx**, **Lerna** (now maintained by Nrwl/Nx), and **Changesets** for versioning. Yarn alone gives you dependency management, running scripts across workspaces, and version bump workflows (`yarn version`), but not remote caching or sophisticated task pipelines.
 
-### npm equivalents
+##### npm equivalents
 
 npm supports workspaces (7+): `npm install -w packages/ui`, `npm run build --workspaces`, `--workspace=...`, `--include-workspace-root`. It lacks Yarn's `foreach` topological/parallel orchestration, `focus`, and constraints, so teams typically add Turborepo/Nx.
 
 ---
 
-## 13. Scripts, Binaries, and Running Tools
+#### 13. Scripts, Binaries, and Running Tools
 
 ```json
 {
@@ -519,9 +488,9 @@ npm supports workspaces (7+): `npm install -w packages/ui`, `npm run build --wor
 
 ---
 
-## 14. Plugins and Constraints
+#### 14. Plugins and Constraints
 
-### Plugins
+##### Plugins
 
 Berry is built around plugins; many core features (e.g., `workspace-tools`, `interactive-tools`, `typescript`) are bundled or optional.
 
@@ -534,7 +503,7 @@ yarn plugin remove @yarnpkg/plugin-typescript
 
 The TypeScript plugin automatically adds corresponding `@types/*` packages when you `yarn add` a package that lacks bundled types. Plugins live in `.yarn/plugins/` and are referenced from `.yarnrc.yml`. Commit them.
 
-### Constraints
+##### Constraints
 
 Define repo-wide rules in `yarn.config.cjs` (JavaScript API) or `constraints.pro` (Prolog, legacy). Examples: "all workspaces must use the same React version," "every package must have a `license` field," "no workspace may depend on package X."
 
@@ -554,9 +523,9 @@ Run `yarn constraints` to check and `yarn constraints --fix` to apply fixes. Nei
 
 ---
 
-## 15. Security
+#### 15. Security
 
-### Supply-chain practices
+##### Supply-chain practices
 
 - **Lockfile + `--immutable`** in CI to prevent unexpected version drift.
 - **Checksums:** Berry verifies archive checksums on install (`--check-cache` re-verifies the cache against the registry).
@@ -576,9 +545,9 @@ Run `yarn constraints` to check and `yarn constraints --fix` to apply fixes. Nei
 
 ---
 
-## 16. CI/CD Usage
+#### 16. CI/CD Usage
 
-### GitHub Actions (Yarn 4, no zero-installs)
+##### GitHub Actions (Yarn 4, no zero-installs)
 
 ```yaml
 name: CI
@@ -611,7 +580,7 @@ Tips:
 - Cache `.yarn/cache` (or the global cache) keyed on `yarn.lock`.
 - For monorepos use `yarn workspaces focus` and `yarn workspaces foreach --since` to avoid doing unnecessary work.
 
-### Docker
+##### Docker
 
 ```dockerfile
 FROM node:22-slim AS base
@@ -639,7 +608,7 @@ Consider multi-stage builds, `yarn workspaces focus --production`, and keeping t
 
 ---
 
-## 17. Publishing Packages
+#### 17. Publishing Packages
 
 ```bash
 yarn npm login
@@ -659,9 +628,9 @@ Notes:
 
 ---
 
-## 18. Yarn vs npm: Detailed Comparison
+#### 18. Yarn vs npm: Detailed Comparison
 
-### 18.1 Summary Table
+##### 18.1 Summary Table
 
 | Area | **npm** (v10/11) | **Yarn Classic** (1.x) | **Yarn Berry** (4.x) |
 |---|---|---|---|
@@ -689,7 +658,7 @@ Notes:
 | Learning curve | Lowest | Low | Moderate |
 | Windows/Unix script portability | Depends on shell (use `cross-env` etc.) | Depends on shell | **Built-in portable shell** |
 
-### 18.2 Architecture Differences
+##### 18.2 Architecture Differences
 
 **npm** builds a hoisted tree in `node_modules` (a "flattened" layout where shared deps are moved up as far as possible). It's simple and universal but allows undeclared imports and has dedupe edge cases.
 
@@ -697,13 +666,13 @@ Notes:
 
 **Yarn Berry** models the install as `resolution → fetch → link` with swappable linkers. PnP removes `node_modules` entirely.
 
-### 18.3 Determinism
+##### 18.3 Determinism
 
 - Both npm (since v5) and Yarn use lockfiles. `npm ci` and `yarn install --immutable` are the "install exactly this" commands.
 - Berry's lockfile includes archive checksums; npm's includes the registry's `integrity` hash. Both detect tampering of tarballs.
 - Historically, lockfile drift between package manager versions caused spurious diffs; pinning the package manager (`packageManager` + Corepack) avoids this for both.
 
-### 18.4 Performance
+##### 18.4 Performance
 
 Real-world numbers depend on project, network, disk, and cache state. Directionally:
 
@@ -713,7 +682,7 @@ Real-world numbers depend on project, network, disk, and cache state. Directiona
 
 Benchmark in your own repo before deciding; published benchmarks vary by methodology.
 
-### 18.5 Developer Experience
+##### 18.5 Developer Experience
 
 | Aspect | npm | Yarn (Berry) |
 |---|---|---|
@@ -724,7 +693,7 @@ Benchmark in your own repo before deciding; published benchmarks vary by methodo
 | Interactive upgrade | No built-in | `yarn upgrade-interactive` |
 | Debugging deps | `npm ls`, `npm explain` | `yarn why`, `yarn info`, `yarn explain` |
 
-### 18.6 Compatibility Gotchas with Yarn Berry/PnP
+##### 18.6 Compatibility Gotchas with Yarn Berry/PnP
 
 - Tools that read `node_modules` directly (some bundlers, native module loaders, Jest plugins, old Storybook/React Native tooling) may break. Use `nodeLinker: node-modules` or `unplug`.
 - Packages with undeclared dependencies need `packageExtensions`.
@@ -732,14 +701,14 @@ Benchmark in your own repo before deciding; published benchmarks vary by methodo
 - Docker/serverless environments need `.pnp.cjs` and the cache present at runtime (or use `node-modules` linker for deploy artifacts).
 - IDEs need `yarn sdks`.
 
-### 18.7 Where npm Is Better
+##### 18.7 Where npm Is Better
 
 - Zero setup, universally documented, default in CI templates.
 - Reference implementation of registry features (provenance, trusted publishing, `npm audit fix`, `npm pkg`, `npm query`).
 - Max compatibility with tools and tutorials.
 - Simple projects don't benefit from Yarn's complexity.
 
-### 18.8 Where Yarn Is Better
+##### 18.8 Where Yarn Is Better
 
 - Monorepos (workspace tooling, `foreach`, `focus`, constraints, `workspace:` protocol).
 - Strict dependency correctness (PnP).
@@ -749,7 +718,7 @@ Benchmark in your own repo before deciding; published benchmarks vary by methodo
 
 ---
 
-## 19. Yarn vs npm vs pnpm (Quick View)
+#### 19. Yarn vs npm vs pnpm (Quick View)
 
 | | npm | Yarn 4 | pnpm |
 |---|---|---|---|
@@ -763,9 +732,9 @@ If you want Yarn's strictness without PnP's tooling friction, evaluate `nodeLink
 
 ---
 
-## 20. Migration Guides
+#### 20. Migration Guides
 
-### 20.1 npm → Yarn 4
+##### 20.1 npm → Yarn 4
 
 ```bash
 # 1. Pin Yarn
@@ -794,7 +763,7 @@ Checklist:
 - Update `.gitignore` as in [section 8](#8-zero-installs-and-the-offline-cache).
 - Run tests with `nodeLinker: node-modules` first, then try PnP.
 
-### 20.2 Yarn Classic → Yarn Berry
+##### 20.2 Yarn Classic → Yarn Berry
 
 ```bash
 yarn set version stable
@@ -812,7 +781,7 @@ Differences to handle:
 - `resolutions` syntax mostly carries over (use `**/pkg` globs carefully).
 - Start with `nodeLinker: node-modules`. The official migration guide recommends this as the incremental path.
 
-### 20.3 Yarn → npm
+##### 20.3 Yarn → npm
 
 ```bash
 rm -rf node_modules yarn.lock .yarn .pnp.* .yarnrc.yml
@@ -824,7 +793,7 @@ Convert `resolutions` → `overrides`, `workspace:` ranges → plain version ran
 
 ---
 
-## 21. Best Practices
+#### 21. Best Practices
 
 1. **Pin the package manager** with the `packageManager` field and Corepack.
 2. **Commit the lockfile**, always. Never `.gitignore` it for applications.
@@ -846,7 +815,7 @@ Convert `resolutions` → `overrides`, `workspace:` ranges → plain version ran
 
 ---
 
-## 22. Troubleshooting
+#### 22. Troubleshooting
 
 | Symptom | Likely cause | Fix |
 |---|---|---|
@@ -876,7 +845,7 @@ YARN_ENABLE_INLINE_BUILDS=1 yarn install
 
 ---
 
-## 23. Decision Guide
+#### 23. Decision Guide
 
 - **Small app or library, want zero friction:** **npm**.
 - **Monorepo with many packages and a need for strong tooling:** **Yarn 4** (or pnpm).
@@ -888,7 +857,7 @@ YARN_ENABLE_INLINE_BUILDS=1 yarn install
 
 ---
 
-## 24. Resources
+#### 24. Resources
 ```
 - Yarn documentation: [Yarn](<https://yarnpkg.com)
 - npm docs: [npm](https://docs.npmjs.com)

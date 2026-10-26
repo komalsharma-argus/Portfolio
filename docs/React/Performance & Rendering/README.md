@@ -1,4 +1,4 @@
-# React Rendering & Performance
+# Performance & Rendering
 
 This guide covers four topics:
 
@@ -9,9 +9,9 @@ This guide covers four topics:
 
 ---
 
-## 1. Virtual DOM & Reconciliation
+#### 1. Virtual DOM & Reconciliation
 
-### Virtual DOM
+##### Virtual DOM
 
 The **Virtual DOM (VDOM)** is a lightweight JavaScript representation of the real DOM: a tree of plain objects describing what the UI should look like. Updating real DOM nodes is relatively expensive, so React does its work on this cheap in-memory tree first and only touches the real DOM when necessary.
 
@@ -29,7 +29,7 @@ The **Virtual DOM (VDOM)** is a lightweight JavaScript representation of the rea
 }
 ```
 
-### How an update works
+##### How an update works
 
 ```
 1. State or props change
@@ -46,14 +46,14 @@ The **Virtual DOM (VDOM)** is a lightweight JavaScript representation of the rea
 
 > "Rendering" means React **calling your component function**. It does not necessarily mean the browser repaints or the DOM changes.
 
-### Reconciliation
+##### Reconciliation
 
 **Reconciliation** is the algorithm React uses to diff two trees. A fully general tree diff is O(n³), so React uses two heuristics to make it O(n):
 
 1. **Elements of different types produce different trees.**
 2. **Keys** hint which child elements are stable across renders.
 
-### Diffing rules
+##### Diffing rules
 
 **Rule 1: Different element type → destroy and rebuild**
 
@@ -92,7 +92,7 @@ Without keys, React compares children by position. Inserting at the front makes 
 {users.map((user) => <UserRow key={user.id} user={user} />)}  // ✅ stable ID
 ```
 
-### Keys and state
+##### Keys and state
 
 State is tied to a component's **position in the tree plus its key**. Changing a key resets that component's state. This is a useful trick:
 
@@ -101,7 +101,7 @@ State is tied to a component's **position in the tree plus its key**. Changing a
 <Profile key={userId} userId={userId} />
 ```
 
-### Common pitfalls
+##### Common pitfalls
 
 | Mistake | Consequence |
 |---|---|
@@ -124,11 +124,11 @@ function Parent() { return <Child />; }
 
 ---
 
-## 2. Re-render Triggers
+#### 2. Re-render Triggers
 
 A component re-renders when React needs to call it again to figure out the new UI. There are only a few causes.
 
-### What triggers a re-render
+##### What triggers a re-render
 
 | Trigger | Details |
 |---|---|
@@ -139,14 +139,14 @@ A component re-renders when React needs to call it again to figure out the new U
 
 > **Props changing is not a separate trigger.** Props only change because a parent re-rendered. The parent re-rendering is the real cause.
 
-### What does NOT trigger a re-render
+##### What does NOT trigger a re-render
 
 - Changing a `useRef` value (`ref.current = ...`)
 - Mutating a variable declared outside the component
 - Directly mutating state (`state.push(x)`): React never sees it
 - Calling a setter with the **same** value (React bails out, though the component function may run once more before it stops)
 
-### Trigger 1: State changes
+##### Trigger 1: State changes
 
 ```jsx
 function Counter() {
@@ -167,7 +167,7 @@ setUser(user);               // ❌ same reference → no re-render
 setUser({ ...user, name: "Ravi" });  // ✅ new reference → re-render
 ```
 
-### Trigger 2: Parent re-renders (cascade)
+##### Trigger 2: Parent re-renders (cascade)
 
 ```jsx
 function Parent() {
@@ -217,7 +217,7 @@ function Wrapper({ children }) {
 <Wrapper><ExpensiveTree /></Wrapper>
 ```
 
-### Trigger 3: Context changes
+##### Trigger 3: Context changes
 
 ```jsx
 const ThemeContext = createContext();
@@ -236,11 +236,11 @@ const value = useMemo(() => ({ theme, setTheme }), [theme]);   // ✅
 return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 ```
 
-### Is a re-render bad?
+##### Is a re-render bad?
 
 Not necessarily. Re-rendering is **cheap** for most components, and React only updates the DOM if the output changed. Optimize only when you can **measure** a problem (slow typing, laggy interactions, large lists).
 
-### Reducing unnecessary re-renders
+##### Reducing unnecessary re-renders
 
 | Technique | When to use |
 |---|---|
@@ -251,11 +251,11 @@ Not necessarily. Re-rendering is **cheap** for most components, and React only u
 
 ---
 
-## 3. Memoization Hooks
+#### 3. Memoization Hooks
 
 **Memoization** caches the result of a computation and reuses it until its inputs change. React offers `useMemo` and `useCallback` for hooks, plus `React.memo` for components. They only skip work when dependencies are **unchanged**.
 
-### useMemo: cache a calculated value
+##### useMemo: cache a calculated value
 
 ```jsx
 const memoizedValue = useMemo(() => computeExpensive(a, b), [a, b]);
@@ -278,7 +278,7 @@ React recomputes only when `products` or `filter` changes. Other re-renders reus
 - Genuinely expensive calculations (filtering/sorting large lists, heavy math)
 - Keeping an **object or array reference stable** when passing it to a memoized child or as a hook dependency
 
-### useCallback: cache a function
+##### useCallback: cache a function
 
 ```jsx
 const memoizedFn = useCallback(() => doSomething(a, b), [a, b]);
@@ -309,7 +309,7 @@ Even if `Child` is wrapped in `React.memo`, the new `handleClick` prop makes it 
 const handleClick = useCallback(() => console.log("clicked"), []);
 ```
 
-### React.memo: skip re-rendering a component
+##### React.memo: skip re-rendering a component
 
 Wraps a component so it re-renders **only if its props changed** (shallow comparison).
 
@@ -344,7 +344,7 @@ const Child = React.memo(function Child({ onSave, config }) { /* ... */ });
 
 > `useCallback` and `useMemo` on their own **don't prevent child re-renders**. They only help when the child is wrapped in `React.memo` (or receives the value as a hook dependency).
 
-### Comparison
+##### Comparison
 
 | | `useMemo` | `useCallback` | `React.memo` |
 |---|---|---|---|
@@ -353,7 +353,7 @@ const Child = React.memo(function Child({ onSave, config }) { /* ... */ });
 | Re-computes when | Dependencies change | Dependencies change | Props change (shallow) |
 | Typical use | Expensive calculations, stable objects | Stable handlers passed to children | Prevent child re-renders |
 
-### Dependency rules
+##### Dependency rules
 
 - List **every reactive value** the function reads in the dependency array.
 - Missing dependencies cause **stale values** (the function sees old state).
@@ -370,7 +370,7 @@ Avoid stale closures with functional updates:
 const increment = useCallback(() => setCount((c) => c + 1), []);   // no `count` dependency needed
 ```
 
-### When NOT to memoize
+##### When NOT to memoize
 
 Memoization isn't free: it adds code, uses memory, and the dependency comparison itself costs time.
 
@@ -385,7 +385,7 @@ Memoization isn't free: it adds code, uses memory, and the dependency comparison
 
 ---
 
-## 4. Code Splitting & Lazy Loading
+#### 4. Code Splitting & Lazy Loading
 
 By default, bundlers combine your whole app into one JavaScript file. Users download code for pages and features they may never visit. **Code splitting** breaks the bundle into smaller **chunks**, and **lazy loading** fetches those chunks only when they're needed. The result is a smaller initial download and a faster first load.
 
@@ -394,7 +394,7 @@ Without splitting:  [ one big bundle: Home + Dashboard + Settings + Charts + Edi
 With splitting:     [ main: Home ]  → loads [ Dashboard ] / [ Settings ] / [ Charts ] on demand
 ```
 
-### Dynamic `import()`
+##### Dynamic `import()`
 
 The standard JavaScript mechanism. It returns a **Promise** and tells the bundler to create a separate chunk.
 
@@ -407,7 +407,7 @@ const module = await import("./heavy");
 module.heavyFunction();
 ```
 
-### `React.lazy` + `Suspense`
+##### `React.lazy` + `Suspense`
 
 `React.lazy` renders a dynamically imported component as a regular component. `Suspense` shows a **fallback** while the chunk loads.
 
@@ -438,7 +438,7 @@ const Chart = lazy(() =>
 );
 ```
 
-### Strategy 1: Route-based splitting (most common)
+##### Strategy 1: Route-based splitting (most common)
 
 Each page becomes its own chunk. This is usually the **best first step** because users only need one page at a time.
 
@@ -465,7 +465,7 @@ function App() {
 }
 ```
 
-### Strategy 2: Component-based splitting
+##### Strategy 2: Component-based splitting
 
 Defer heavy components that aren't visible right away: modals, charts, rich-text editors, maps.
 
@@ -490,7 +490,7 @@ function Report() {
 
 The chart's code is downloaded only when the button is clicked.
 
-### Strategy 3: Library-based splitting
+##### Strategy 3: Library-based splitting
 
 Load large libraries only at the moment you use them.
 
@@ -503,7 +503,7 @@ async function exportToPdf(data) {
 }
 ```
 
-### Suspense boundaries
+##### Suspense boundaries
 
 Place boundaries thoughtfully. Where you put them determines what shows a fallback.
 
@@ -522,7 +522,7 @@ Place boundaries thoughtfully. Where you put them determines what shows a fallba
 - Use **skeleton/placeholder fallbacks** matching the final layout to reduce layout shift.
 - Nest boundaries so a slow chunk doesn't blank the entire page.
 
-### Handling load failures
+##### Handling load failures
 
 Network issues can make a chunk fail to load. Wrap lazy components in an **Error Boundary** so the app doesn't crash.
 
@@ -544,7 +544,7 @@ class ErrorBoundary extends React.Component {
 </ErrorBoundary>
 ```
 
-### Preloading to hide load time
+##### Preloading to hide load time
 
 Start fetching a chunk **before** the user needs it, for example on hover.
 
@@ -555,7 +555,7 @@ const Settings = lazy(loadSettings);
 <Link to="/settings" onMouseEnter={loadSettings}>Settings</Link>
 ```
 
-### Best practices
+##### Best practices
 
 - Start with **route-level** splitting, then split heavy components as needed.
 - Don't split tiny components: each chunk costs an extra network request.
@@ -566,7 +566,7 @@ const Settings = lazy(loadSettings);
 
 ---
 
-## Quick Reference
+#### Quick Reference
 
 | Topic | Key idea | Remember |
 |---|---|---|
@@ -579,7 +579,7 @@ const Settings = lazy(loadSettings);
 | **Code splitting** | Break the bundle into chunks | Route-based first |
 | **`lazy` + `Suspense`** | Load components on demand | Default export required; always add a fallback |
 
-### Common mistakes checklist
+##### Common mistakes checklist
 
 - [ ] Using array index or random values as list keys
 - [ ] Defining components inside other components

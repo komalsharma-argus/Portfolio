@@ -5,56 +5,7 @@ covering how npm works, how to manage dependencies, how packages are
 resolved and executed, how to publish packages, and how to troubleshoot
 real-world Node.js projects.
 
-------------------------------------------------------------------------
-
-## Table of Contents
-
-1.  [What is npm?](#what-is-npm)
-2.  [Node.js, npm, and npx](#nodejs-npm-and-npx)
-3.  [Installing and Verifying npm](#installing-and-verifying-npm)
-4.  [npm Registry](#npm-registry)
-5.  [package.json](#packagejson)
-6.  [package-lock.json](#package-lockjson)
-7.  [node_modules](#node_modules)
-8.  [Dependencies vs Dev Dependencies vs Peer
-    Dependencies](#dependencies-vs-dev-dependencies-vs-peer-dependencies)
-9.  [Semantic Versioning](#semantic-versioning)
-10. [Version Ranges](#version-ranges)
-11. [Installing Packages](#installing-packages)
-12. [Removing and Updating Packages](#removing-and-updating-packages)
-13. [npm Scripts](#npm-scripts)
-14. [npx](#npx)
-15. [Global vs Local Packages](#global-vs-local-packages)
-16. [How npm Resolves Dependencies](#how-npm-resolves-dependencies)
-17. [npm install vs npm ci](#npm-install-vs-npm-ci)
-18. [Dependency Trees and
-    Deduplication](#dependency-trees-and-deduplication)
-19. [npm Workspaces](#npm-workspaces)
-20. [npm Configuration and .npmrc](#npm-configuration-and-npmrc)
-21. [Environment Variables and
-    Secrets](#environment-variables-and-secrets)
-22. [Private Registries and Scoped
-    Packages](#private-registries-and-scoped-packages)
-23. [Publishing an npm Package](#publishing-an-npm-package)
-24. [Package Entry Points and
-    Exports](#package-entry-points-and-exports)
-25. [CommonJS vs ESM](#commonjs-vs-esm)
-26. [Lifecycle and Pre/Post Scripts](#lifecycle-and-prepost-scripts)
-27. [Security](#security)
-28. [Auditing and Vulnerability
-    Management](#auditing-and-vulnerability-management)
-29. [Reproducible Builds and CI/CD](#reproducible-builds-and-cicd)
-30. [Caching](#caching)
-31. [Troubleshooting npm](#troubleshooting-npm)
-32. [Performance and Dependency
-    Hygiene](#performance-and-dependency-hygiene)
-33. [Useful npm Commands](#useful-npm-commands)
-34. [SDE-1 Interview Topics](#sde-1-interview-topics)
-35. [Practical Checklist](#practical-checklist)
-
-------------------------------------------------------------------------
-
-## What is npm?
+#### What is npm?
 
 **npm** originally stood for Node Package Manager. It is the default
 package manager for Node.js and consists broadly of:
@@ -91,11 +42,11 @@ This generally:
 
 ------------------------------------------------------------------------
 
-# Node.js, npm, and npx
+### Node.js, npm, and npx
 
 These three are related but serve different purposes.
 
-## Node.js
+#### Node.js
 
 Node.js is the JavaScript runtime.
 
@@ -105,7 +56,7 @@ node app.js
 
 runs JavaScript using Node.js.
 
-## npm
+#### npm
 
 npm manages packages and project dependencies.
 
@@ -113,7 +64,7 @@ npm manages packages and project dependencies.
 npm install express
 ```
 
-## npx
+#### npx
 
 `npx` executes package binaries.
 
@@ -135,7 +86,7 @@ Modern npm distributions include `npx`.
 
 ------------------------------------------------------------------------
 
-# Installing and Verifying npm
+### Installing and Verifying npm
 
 Installing Node.js normally installs npm as well.
 
@@ -158,7 +109,7 @@ operating system.
 
 ------------------------------------------------------------------------
 
-# npm Registry
+### npm Registry
 
 The **npm registry** is the package repository used by npm.
 
@@ -202,7 +153,7 @@ npm view express dist.tarball
 
 ------------------------------------------------------------------------
 
-# package.json
+### package.json
 
 `package.json` is one of the most important files in a Node.js project.
 
@@ -244,9 +195,9 @@ A basic example:
 }
 ```
 
-## Important package.json fields
+#### Important package.json fields
 
-### name
+##### name
 
 Package/project name.
 
@@ -256,7 +207,7 @@ Package/project name.
 
 For published packages, the name must follow npm naming rules.
 
-### version
+##### version
 
 The package's current version.
 
@@ -264,11 +215,11 @@ The package's current version.
 "version": "1.0.0"
 ```
 
-### description
+##### description
 
 Short description of the package.
 
-### main
+##### main
 
 Historically used as the CommonJS entry point.
 
@@ -278,7 +229,7 @@ Historically used as the CommonJS entry point.
 
 For modern packages, `exports` is often preferred.
 
-### type
+##### type
 
 Controls how `.js` files are interpreted.
 
@@ -291,7 +242,7 @@ means `.js` files are treated as ES modules.
 Without it, `.js` files are generally treated as CommonJS unless another
 rule applies.
 
-### scripts
+##### scripts
 
 Defines commands that can be run using npm.
 
@@ -309,7 +260,7 @@ npm run dev
 npm start
 ```
 
-### dependencies
+##### dependencies
 
 Packages required by the application at runtime.
 
@@ -319,7 +270,7 @@ Packages required by the application at runtime.
 }
 ```
 
-### devDependencies
+##### devDependencies
 
 Packages required primarily for development, testing, linting, building,
 etc.
@@ -330,7 +281,7 @@ etc.
 }
 ```
 
-### peerDependencies
+##### peerDependencies
 
 Used when the package expects the consuming project to provide a
 compatible dependency.
@@ -350,19 +301,19 @@ Example:
 }
 ```
 
-### optionalDependencies
+##### optionalDependencies
 
 Dependencies that are allowed to fail during installation without
 necessarily failing the entire installation.
 
-### bundledDependencies
+##### bundledDependencies
 
 Dependencies that are included inside the published package.
 
 Use this only when there is a concrete reason; ordinary dependencies are
 normally preferable.
 
-### engines
+##### engines
 
 Specifies supported runtime versions.
 
@@ -377,7 +328,7 @@ as a substitute for runtime enforcement.
 
 ------------------------------------------------------------------------
 
-# package-lock.json
+### package-lock.json
 
 `package-lock.json` records the dependency tree resolved for a project.
 
@@ -405,7 +356,7 @@ node_modules
     | contains installed packages
 ```
 
-## Should package-lock.json be committed?
+#### Should package-lock.json be committed?
 
 For applications, generally **yes**.
 
@@ -424,7 +375,7 @@ node_modules/
 
 ------------------------------------------------------------------------
 
-# node_modules
+### node_modules
 
 `node_modules` contains installed dependencies.
 
@@ -456,11 +407,11 @@ npm ci
 
 ------------------------------------------------------------------------
 
-# Dependencies vs Dev Dependencies vs Peer Dependencies
+### Dependencies vs Dev Dependencies vs Peer Dependencies
 
 This distinction is important in professional development.
 
-## dependencies
+#### dependencies
 
 Required for the application to run.
 
@@ -472,7 +423,7 @@ Example:
 }
 ```
 
-## devDependencies
+#### devDependencies
 
 Required for development/build/test workflows.
 
@@ -485,7 +436,7 @@ Example:
 }
 ```
 
-## peerDependencies
+#### peerDependencies
 
 Used by libraries when the host application is expected to provide a
 dependency.
@@ -498,7 +449,7 @@ Example:
 }
 ```
 
-### Rule of thumb
+##### Rule of thumb
 
 Ask:
 
@@ -511,7 +462,7 @@ project, it is generally a `devDependency`.
 
 ------------------------------------------------------------------------
 
-# Semantic Versioning
+### Semantic Versioning
 
 npm packages commonly use **Semantic Versioning (SemVer)**.
 
@@ -533,7 +484,7 @@ means:
 -   `4` -\> MINOR
 -   `7` -\> PATCH
 
-## MAJOR
+#### MAJOR
 
 Breaking API changes.
 
@@ -541,7 +492,7 @@ Breaking API changes.
 2.x.x -> 3.x.x
 ```
 
-## MINOR
+#### MINOR
 
 Backward-compatible features.
 
@@ -549,7 +500,7 @@ Backward-compatible features.
 2.4.x -> 2.5.x
 ```
 
-## PATCH
+#### PATCH
 
 Backward-compatible bug fixes.
 
@@ -565,11 +516,11 @@ Pre-release versions can look like:
 
 ------------------------------------------------------------------------
 
-# Version Ranges
+### Version Ranges
 
 npm supports version ranges.
 
-## Exact version
+#### Exact version
 
 ``` json
 "express": "5.1.0"
@@ -577,7 +528,7 @@ npm supports version ranges.
 
 Only that version is requested.
 
-## Caret
+#### Caret
 
 ``` json
 "express": "^5.1.0"
@@ -598,7 +549,7 @@ allows versions:
 >=5.1.0 <6.0.0
 ```
 
-## Tilde
+#### Tilde
 
 ``` json
 "express": "~5.1.0"
@@ -610,7 +561,7 @@ Generally allows patch-level updates:
 >=5.1.0 <5.2.0
 ```
 
-## Wildcards
+#### Wildcards
 
 ``` json
 "express": "5.x"
@@ -626,9 +577,9 @@ Avoid overly broad ranges unless there is a specific reason.
 
 ------------------------------------------------------------------------
 
-# Installing Packages
+### Installing Packages
 
-## Install a production dependency
+#### Install a production dependency
 
 ``` bash
 npm install express
@@ -640,7 +591,7 @@ Shortcut:
 npm i express
 ```
 
-## Install a development dependency
+#### Install a development dependency
 
 ``` bash
 npm install --save-dev eslint
@@ -652,19 +603,19 @@ Shortcut:
 npm i -D eslint
 ```
 
-## Install a specific version
+#### Install a specific version
 
 ``` bash
 npm install express@5.1.0
 ```
 
-## Install the latest version
+#### Install the latest version
 
 ``` bash
 npm install express@latest
 ```
 
-## Install a package globally
+#### Install a package globally
 
 ``` bash
 npm install -g typescript
@@ -673,7 +624,7 @@ npm install -g typescript
 Use global installation mainly for tools that you intentionally want
 available system-wide. Project dependencies should normally be local.
 
-## Install all project dependencies
+#### Install all project dependencies
 
 ``` bash
 npm install
@@ -683,7 +634,7 @@ npm reads `package.json` and the lockfile when available.
 
 ------------------------------------------------------------------------
 
-# Removing and Updating Packages
+### Removing and Updating Packages
 
 Remove:
 
@@ -717,7 +668,7 @@ npm ls express
 
 ------------------------------------------------------------------------
 
-# npm Scripts
+### npm Scripts
 
 Scripts are commands defined in `package.json`.
 
@@ -752,7 +703,7 @@ npm restart
 npm stop
 ```
 
-## Why scripts matter
+#### Why scripts matter
 
 They standardize project commands.
 
@@ -772,7 +723,7 @@ This becomes particularly valuable in teams and CI/CD pipelines.
 
 ------------------------------------------------------------------------
 
-# npx
+### npx
 
 `npx` runs executables supplied by npm packages.
 
@@ -801,9 +752,9 @@ installation.
 
 ------------------------------------------------------------------------
 
-# Global vs Local Packages
+### Global vs Local Packages
 
-## Local installation
+#### Local installation
 
 ``` bash
 npm install eslint --save-dev
@@ -819,7 +770,7 @@ node_modules/.bin/
 
 npm scripts automatically make local binaries available on `PATH`.
 
-## Global installation
+#### Global installation
 
 ``` bash
 npm install -g eslint
@@ -833,7 +784,7 @@ Check the global prefix:
 npm prefix -g
 ```
 
-### Best practice
+##### Best practice
 
 For project-specific tooling:
 
@@ -846,7 +797,7 @@ versions.
 
 ------------------------------------------------------------------------
 
-# How npm Resolves Dependencies
+### How npm Resolves Dependencies
 
 Suppose your application depends on:
 
@@ -896,11 +847,11 @@ a downloader, is important for debugging.
 
 ------------------------------------------------------------------------
 
-# npm install vs npm ci
+### npm install vs npm ci
 
 This is a very common SDE-1 and production question.
 
-## npm install
+#### npm install
 
 Used for normal development.
 
@@ -915,7 +866,7 @@ It can:
 -   Install packages.
 -   Reconcile `package.json` and the lockfile.
 
-## npm ci
+#### npm ci
 
 Primarily intended for clean, automated, reproducible installations.
 
@@ -931,7 +882,7 @@ Important characteristics:
 -   Does not intentionally update the lockfile.
 -   Commonly used in CI/CD.
 
-### Typical workflow
+##### Typical workflow
 
 Developer:
 
@@ -947,7 +898,7 @@ npm ci
 
 ------------------------------------------------------------------------
 
-# Dependency Trees and Deduplication
+### Dependency Trees and Deduplication
 
 Use:
 
@@ -981,7 +932,7 @@ Different packages may legitimately require incompatible versions.
 
 ------------------------------------------------------------------------
 
-# npm Workspaces
+### npm Workspaces
 
 Workspaces allow multiple packages to live in one repository.
 
@@ -1038,7 +989,7 @@ projects in the same Git repository.
 
 ------------------------------------------------------------------------
 
-# npm Configuration and .npmrc
+### npm Configuration and .npmrc
 
 npm configuration can be controlled using:
 
@@ -1071,7 +1022,7 @@ Set a value:
 npm config set registry https://registry.npmjs.org/
 ```
 
-### Important caution
+##### Important caution
 
 Never commit credentials or authentication tokens into `.npmrc`.
 
@@ -1081,7 +1032,7 @@ mechanisms.
 
 ------------------------------------------------------------------------
 
-# Environment Variables and Secrets
+### Environment Variables and Secrets
 
 Do not put secrets directly into:
 
@@ -1117,7 +1068,7 @@ files.
 
 ------------------------------------------------------------------------
 
-# Private Registries and Scoped Packages
+### Private Registries and Scoped Packages
 
 npm supports scoped packages:
 
@@ -1147,7 +1098,7 @@ hard-coded into source control.
 
 ------------------------------------------------------------------------
 
-# Publishing an npm Package
+### Publishing an npm Package
 
 Before publishing, ensure:
 
@@ -1184,7 +1135,7 @@ For scoped public packages, depending on package configuration:
 npm publish --access public
 ```
 
-## Versioning before publishing
+#### Versioning before publishing
 
 Patch:
 
@@ -1207,7 +1158,7 @@ npm version major
 These commands update the package version and typically create the
 corresponding Git metadata depending on configuration.
 
-### Important
+##### Important
 
 Do not treat publishing as:
 
@@ -1230,7 +1181,7 @@ A professional release process should also consider:
 
 ------------------------------------------------------------------------
 
-# Package Entry Points and Exports
+### Package Entry Points and Exports
 
 A package needs a clear public API.
 
@@ -1289,11 +1240,11 @@ files.
 
 ------------------------------------------------------------------------
 
-# CommonJS vs ESM
+### CommonJS vs ESM
 
 Node.js supports both major JavaScript module systems.
 
-## CommonJS
+#### CommonJS
 
 ``` javascript
 const express = require("express");
@@ -1301,7 +1252,7 @@ const express = require("express");
 module.exports = myFunction;
 ```
 
-## ES Modules
+#### ES Modules
 
 ``` javascript
 import express from "express";
@@ -1329,7 +1280,7 @@ ES modules can explicitly use:
 .mjs
 ```
 
-### Why SDE-1 developers should understand this
+##### Why SDE-1 developers should understand this
 
 Many npm errors are actually module-system errors:
 
@@ -1349,7 +1300,7 @@ When debugging, inspect:
 
 ------------------------------------------------------------------------
 
-# Lifecycle and Pre/Post Scripts
+### Lifecycle and Pre/Post Scripts
 
 npm supports lifecycle scripts.
 
@@ -1384,7 +1335,7 @@ postbuild
 There are also lifecycle events associated with installation and
 publishing.
 
-### Security consideration
+##### Security consideration
 
 Lifecycle scripts can execute code during package installation or other
 npm operations.
@@ -1393,7 +1344,7 @@ This is one reason dependency trust and supply-chain security matter.
 
 ------------------------------------------------------------------------
 
-# Security
+### Security
 
 npm projects are exposed to software supply-chain risks.
 
@@ -1409,7 +1360,7 @@ Major categories include:
 -   Stale dependencies.
 -   Untrusted transitive dependencies.
 
-## Typosquatting
+#### Typosquatting
 
 An attacker may publish a package with a name similar to a popular
 package.
@@ -1423,7 +1374,7 @@ populer-package
 
 Always verify package names before installing.
 
-## Dependency confusion
+#### Dependency confusion
 
 An internal package name can accidentally resolve to a malicious public
 package if registry configuration is incorrect.
@@ -1433,7 +1384,7 @@ this risk.
 
 ------------------------------------------------------------------------
 
-# Auditing and Vulnerability Management
+### Auditing and Vulnerability Management
 
 Check vulnerabilities:
 
@@ -1475,7 +1426,7 @@ tree.
 
 ------------------------------------------------------------------------
 
-# Reproducible Builds and CI/CD
+### Reproducible Builds and CI/CD
 
 A production Node.js project should aim for reproducible dependency
 installation.
@@ -1511,7 +1462,7 @@ randomly receive different transitive dependency versions.
 
 ------------------------------------------------------------------------
 
-# Caching
+### Caching
 
 npm maintains a local cache.
 
@@ -1540,9 +1491,9 @@ Many npm issues are caused by:
 
 ------------------------------------------------------------------------
 
-# Troubleshooting npm
+### Troubleshooting npm
 
-## 1. "Module not found"
+#### 1. "Module not found"
 
 Example:
 
@@ -1567,7 +1518,7 @@ directory.
 
 ------------------------------------------------------------------------
 
-## 2. Delete node_modules and reinstall
+#### 2. Delete node_modules and reinstall
 
 When the dependency installation is genuinely corrupted:
 
@@ -1585,7 +1536,7 @@ npm ci
 
 ------------------------------------------------------------------------
 
-## 3. package-lock.json conflict
+#### 3. package-lock.json conflict
 
 If `package.json` and the lockfile are inconsistent, understand why
 before deleting the lockfile.
@@ -1603,7 +1554,7 @@ step.
 
 ------------------------------------------------------------------------
 
-## 4. Peer dependency conflict
+#### 4. Peer dependency conflict
 
 You may see errors such as:
 
@@ -1631,7 +1582,7 @@ and leave an invalid or unsupported combination.
 
 ------------------------------------------------------------------------
 
-## 5. EACCES / permission errors
+#### 5. EACCES / permission errors
 
 On Unix-like systems, permission errors can happen when npm directories
 are owned by another user.
@@ -1653,7 +1604,7 @@ preferable.
 
 ------------------------------------------------------------------------
 
-## 6. Registry problems
+#### 6. Registry problems
 
 Check:
 
@@ -1677,7 +1628,7 @@ If using a company registry, verify:
 
 ------------------------------------------------------------------------
 
-## 7. Network errors
+#### 7. Network errors
 
 Common errors include:
 
@@ -1700,7 +1651,7 @@ Do not immediately assume the package itself is broken.
 
 ------------------------------------------------------------------------
 
-## 8. "Works on my machine"
+#### 8. "Works on my machine"
 
 Check:
 
@@ -1731,7 +1682,7 @@ in CI to reduce environment-dependent dependency differences.
 
 ------------------------------------------------------------------------
 
-# Performance and Dependency Hygiene
+### Performance and Dependency Hygiene
 
 A good SDE-1 should not only know how to install packages but also
 understand the cost of dependencies.
@@ -1763,16 +1714,16 @@ makes sense.
 
 ------------------------------------------------------------------------
 
-# Useful npm Commands
+### Useful npm Commands
 
-## Project initialization
+#### Project initialization
 
 ``` bash
 npm init
 npm init -y
 ```
 
-## Installation
+#### Installation
 
 ``` bash
 npm install
@@ -1782,13 +1733,13 @@ npm install -D <package>
 npm install -g <package>
 ```
 
-## Removal
+#### Removal
 
 ``` bash
 npm uninstall <package>
 ```
 
-## Updates
+#### Updates
 
 ``` bash
 npm update
@@ -1796,7 +1747,7 @@ npm outdated
 npm install <package>@latest
 ```
 
-## Inspection
+#### Inspection
 
 ``` bash
 npm ls
@@ -1807,7 +1758,7 @@ npm config list
 npm config get registry
 ```
 
-## Scripts
+#### Scripts
 
 ``` bash
 npm run <script>
@@ -1815,21 +1766,21 @@ npm start
 npm test
 ```
 
-## Security
+#### Security
 
 ``` bash
 npm audit
 npm audit fix
 ```
 
-## Cache
+#### Cache
 
 ``` bash
 npm cache verify
 npm cache clean --force
 ```
 
-## Package publishing
+#### Package publishing
 
 ``` bash
 npm login
@@ -1837,7 +1788,7 @@ npm pack --dry-run
 npm publish
 ```
 
-## Versioning
+#### Versioning
 
 ``` bash
 npm version patch
@@ -1845,7 +1796,7 @@ npm version minor
 npm version major
 ```
 
-## Dependency graph
+#### Dependency graph
 
 ``` bash
 npm ls
@@ -1853,166 +1804,12 @@ npm explain <package>
 npm dedupe
 ```
 
-------------------------------------------------------------------------
-
-# SDE-1 Interview Topics
-
-An SDE-1 should be able to confidently answer the following.
-
-## Fundamentals
-
--   What is npm?
--   What is the npm registry?
--   Difference between Node.js and npm.
--   Difference between npm and npx.
--   What is `package.json`?
--   What is `package-lock.json`?
--   What is `node_modules`?
--   Why should `node_modules` generally not be committed?
-
-## Dependencies
-
--   Difference between `dependencies` and `devDependencies`.
--   What are `peerDependencies`?
--   What are `optionalDependencies`?
--   What are transitive dependencies?
--   What is dependency resolution?
--   What is dependency deduplication?
-
-## Versions
-
--   What is semantic versioning?
--   Difference between major, minor, and patch versions.
--   Difference between `^` and `~`.
--   Why can `package-lock.json` resolve a different version than someone
-    expects from `package.json`?
-
-## Installation
-
--   Difference between `npm install` and `npm ci`.
--   Why is `npm ci` commonly used in CI?
--   What happens when `npm install express` runs?
--   Why can two projects have different versions of the same dependency?
-
-## Scripts
-
--   What are npm scripts?
--   Why use `npm run dev` instead of directly executing a command?
--   What are `pre` and `post` lifecycle scripts?
--   How do local package binaries become available inside npm scripts?
-
-## Modules
-
--   CommonJS vs ESM.
--   What does `"type": "module"` do?
--   What are `main` and `exports`?
--   Why does a package sometimes fail with `ERR_REQUIRE_ESM`?
-
-## Security
-
--   What is `npm audit`?
--   What are transitive vulnerabilities?
--   What is dependency confusion?
--   What is typosquatting?
--   Why are install scripts a supply-chain concern?
--   Why should secrets never be committed to `.npmrc`?
-
-## Production
-
--   Why commit `package-lock.json`?
--   Why use `npm ci` in CI/CD?
--   How would you troubleshoot an npm installation failure?
--   How would you investigate a dependency conflict?
--   How would you reduce dependency-related risk?
-
-------------------------------------------------------------------------
-
-# Practical SDE-1 Exercise
-
-Create a Node.js project:
-
-``` bash
-mkdir npm-learning
-cd npm-learning
-npm init -y
-```
-
-Install Express:
-
-``` bash
-npm install express
-```
-
-Install ESLint as a development dependency:
-
-``` bash
-npm install -D eslint
-```
-
-Inspect:
-
-``` bash
-npm ls
-npm outdated
-npm audit
-```
-
-Add scripts:
-
-``` json
-{
-  "scripts": {
-    "start": "node src/server.js"
-  }
-}
-```
-
-Create:
-
-``` text
-src/server.js
-```
-
-Then run:
-
-``` bash
-npm start
-```
-
-Next, delete:
-
-``` text
-node_modules/
-```
-
-and restore the project using:
-
-``` bash
-npm ci
-```
-
-This exercise demonstrates the relationship between:
-
-``` text
-package.json
-     ↓
-package-lock.json
-     ↓
-npm install / npm ci
-     ↓
-node_modules
-     ↓
-npm scripts
-```
-
-------------------------------------------------------------------------
-
-# Practical Checklist
+### Practical Checklist
 
 Before considering your npm fundamentals SDE-1 ready, you should be
 comfortable with:
 
-### Package Management
+##### Package Management
 
 -   [ ] `npm init`
 -   [ ] `npm install`
@@ -2022,7 +1819,7 @@ comfortable with:
 -   [ ] `npm ls`
 -   [ ] `npm explain`
 
-### Dependency Management
+##### Dependency Management
 
 -   [ ] `dependencies`
 -   [ ] `devDependencies`
@@ -2032,7 +1829,7 @@ comfortable with:
 -   [ ] Dependency trees
 -   [ ] Deduplication
 
-### Versioning
+##### Versioning
 
 -   [ ] SemVer
 -   [ ] Major/minor/patch
@@ -2041,7 +1838,7 @@ comfortable with:
 -   [ ] Exact versions
 -   [ ] Lockfiles
 
-### Project Configuration
+##### Project Configuration
 
 -   [ ] `package.json`
 -   [ ] `package-lock.json`
@@ -2050,7 +1847,7 @@ comfortable with:
 -   [ ] Workspaces
 -   [ ] Environment variables
 
-### Node.js Integration
+##### Node.js Integration
 
 -   [ ] CommonJS
 -   [ ] ESM
@@ -2060,7 +1857,7 @@ comfortable with:
 -   [ ] Local binaries
 -   [ ] npx
 
-### Production
+##### Production
 
 -   [ ] `npm ci`
 -   [ ] CI/CD dependency installation
@@ -2069,7 +1866,7 @@ comfortable with:
 -   [ ] Security practices
 -   [ ] Registry configuration
 
-### Publishing
+##### Publishing
 
 -   [ ] npm login
 -   [ ] Package naming
@@ -2081,7 +1878,7 @@ comfortable with:
 
 ------------------------------------------------------------------------
 
-# Recommended Mental Model
+### Mental Model
 
 The most useful way to understand npm is to separate its
 responsibilities:
@@ -2122,7 +1919,7 @@ about.
 
 ------------------------------------------------------------------------
 
-# Final Takeaway
+### Final Takeaway
 
 For an SDE-1, npm knowledge is not about memorizing commands.
 

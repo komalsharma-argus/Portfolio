@@ -10,7 +10,7 @@ Hooks let function components use state, side effects, refs, and shared data. Th
 
 ---
 
-## 1. useState
+#### 1. useState
 
 Adds **state** to a function component. When state changes, the component re-renders.
 
@@ -20,7 +20,7 @@ import { useState } from "react";
 const [state, setState] = useState(initialValue);
 ```
 
-### Basic example
+##### Basic example
 
 ```jsx
 function Counter() {
@@ -36,7 +36,7 @@ function Counter() {
 }
 ```
 
-### Functional updates
+##### Functional updates
 
 When the new value depends on the previous one, pass a function. It always receives the latest value.
 
@@ -44,7 +44,7 @@ When the new value depends on the previous one, pass a function. It always recei
 setCount((prev) => prev + 1);
 ```
 
-### Lazy initial state
+##### Lazy initial state
 
 If the initial value is expensive to compute, pass a function. It runs only on the first render.
 
@@ -52,7 +52,7 @@ If the initial value is expensive to compute, pass a function. It runs only on t
 const [data, setData] = useState(() => JSON.parse(localStorage.getItem("data")) ?? []);
 ```
 
-### Objects and arrays: never mutate, always copy
+##### Objects and arrays: never mutate, always copy
 
 ```jsx
 const [user, setUser] = useState({ name: "Asha", age: 24 });
@@ -64,7 +64,7 @@ setItems((prev) => prev.filter((i) => i !== "old"));   // remove
 setItems((prev) => prev.map((i) => (i.id === 1 ? { ...i, done: true } : i))); // update
 ```
 
-### Key points
+##### Key points
 
 - The setter **replaces** state. For objects, spread the old values yourself.
 - Updates are **batched and asynchronous**: the variable keeps its old value until the next render.
@@ -73,7 +73,7 @@ setItems((prev) => prev.map((i) => (i.id === 1 ? { ...i, done: true } : i))); //
 
 ---
 
-## 2. useEffect
+#### 2. useEffect
 
 Runs **side effects** after render: data fetching, subscriptions, timers, DOM updates, and syncing with external systems.
 
@@ -89,7 +89,7 @@ useEffect(() => {
 }, [dependencies]);
 ```
 
-### The dependency array
+##### The dependency array
 
 | Dependency array | When the effect runs |
 |---|---|
@@ -103,7 +103,7 @@ useEffect(() => { console.log("Mounted"); }, []);                  // mount only
 useEffect(() => { document.title = `Count: ${count}`; }, [count]); // when count changes
 ```
 
-### Cleanup
+##### Cleanup
 
 The returned function runs **before the next effect** and when the component **unmounts**. Use it to avoid leaks.
 
@@ -130,7 +130,7 @@ useEffect(() => {
 }, []);
 ```
 
-### Fetching data
+##### Fetching data
 
 ```jsx
 function User({ id }) {
@@ -164,14 +164,14 @@ function User({ id }) {
 
 > The effect callback cannot be `async` directly. Define an async function inside it, or use promises as above.
 
-### Key points
+##### Key points
 
 - Include **every reactive value** (props, state, functions) used inside the effect in the dependency array.
 - Missing dependencies cause **stale values**. Unstable dependencies (new objects/functions each render) cause **infinite loops**.
 - Don't use effects for things you can calculate during render or handle in an event handler.
 - In development with Strict Mode, effects run **twice** on mount to help you catch missing cleanup. This does not happen in production.
 
-### Common mistake: infinite loop
+##### Common mistake: infinite loop
 
 ```jsx
 useEffect(() => {
@@ -181,7 +181,7 @@ useEffect(() => {
 
 ---
 
-## 3. useRef
+#### 3. useRef
 
 Returns a **mutable object** `{ current: value }` that persists across renders. **Changing it does not trigger a re-render.**
 
@@ -192,7 +192,7 @@ const ref = useRef(initialValue);
 ref.current; // read or write
 ```
 
-### Use case 1: Access a DOM element
+##### Use case 1: Access a DOM element
 
 ```jsx
 function SearchBox() {
@@ -215,7 +215,7 @@ useEffect(() => {
 }, []);
 ```
 
-### Use case 2: Store a mutable value without re-rendering
+##### Use case 2: Store a mutable value without re-rendering
 
 Timers, previous values, counters, and flags are good candidates.
 
@@ -244,7 +244,7 @@ function Stopwatch() {
 }
 ```
 
-### Use case 3: Track the previous value
+##### Use case 3: Track the previous value
 
 ```jsx
 function usePrevious(value) {
@@ -256,7 +256,7 @@ function usePrevious(value) {
 }
 ```
 
-### useState vs useRef
+##### useState vs useRef
 
 | | `useState` | `useRef` |
 |---|---|---|
@@ -265,7 +265,7 @@ function usePrevious(value) {
 | Use for | Data shown in the UI | DOM access, timers, values the UI doesn't display |
 | Update style | Via setter | Mutate `ref.current` directly |
 
-### Key points
+##### Key points
 
 - Don't read or write `ref.current` **during rendering** (except for initial setup). Do it in event handlers or effects.
 - `ref.current` is `null` until the element mounts.
@@ -273,11 +273,11 @@ function usePrevious(value) {
 
 ---
 
-## 4. Context API (useContext)
+#### 4. Context API (useContext)
 
 Shares data across the component tree **without passing props through every level** (avoids "prop drilling").
 
-### The three steps
+##### The three steps
 
 **1. Create the context**
 
@@ -333,7 +333,7 @@ function App() {
 }
 ```
 
-### Recommended pattern: wrap in a custom hook
+##### Recommended pattern: wrap in a custom hook
 
 Cleaner imports and a helpful error when used outside the provider.
 
@@ -352,7 +352,7 @@ const { theme, toggleTheme } = useTheme();
 
 > For this to work, create the context with `createContext(undefined)`.
 
-### Key points
+##### Key points
 
 - Every component that calls `useContext(X)` **re-renders whenever the context value changes**.
 - Passing a new object to `value` on every render (`value={{ a, b }}`) re-renders all consumers each time. Keep the value stable (for example with `useMemo`) in performance-sensitive trees.
@@ -361,19 +361,19 @@ const { theme, toggleTheme } = useTheme();
 
 ---
 
-## 5. Custom Hooks
+#### 5. Custom Hooks
 
 A **custom hook** is a JavaScript function whose name starts with `use` and that calls other hooks. It lets you **extract and reuse stateful logic** across components.
 
 > Components share **logic**, not **state**: each component that calls a custom hook gets its own independent state.
 
-### Rules
+##### Rules
 
 - Name must start with **`use`** (`useFetch`, `useToggle`).
 - Call hooks only at the **top level**, never in loops, conditions, or nested functions.
 - Call hooks only from **components or other hooks**.
 
-### Example 1: `useToggle`
+##### Example 1: `useToggle`
 
 ```jsx
 function useToggle(initial = false) {
@@ -394,7 +394,7 @@ function Modal() {
 }
 ```
 
-### Example 2: `useFetch`
+##### Example 2: `useFetch`
 
 ```jsx
 function useFetch(url) {
@@ -440,7 +440,7 @@ function Posts() {
 }
 ```
 
-### Example 3: `useLocalStorage`
+##### Example 3: `useLocalStorage`
 
 ```jsx
 function useLocalStorage(key, initialValue) {
@@ -460,7 +460,7 @@ function useLocalStorage(key, initialValue) {
 const [name, setName] = useLocalStorage("name", "");
 ```
 
-### Example 4: `useDebounce`
+##### Example 4: `useDebounce`
 
 Delays updating a value until the user stops changing it (great for search inputs).
 
@@ -485,15 +485,12 @@ useEffect(() => {
 }, [debouncedQuery]);
 ```
 
-### Key points
+##### Key points
 
 - Return whatever is most convenient: an array (like `useState`) for 2 values, or an object for many.
 - Keep each hook focused on **one job**.
 - Custom hooks can combine all the hooks above: `useState`, `useEffect`, `useRef`, and `useContext`.
-
----
-
-## Quick Reference
+#### Quick Reference
 
 | Hook | Purpose | Re-renders on change? | Typical use |
 |---|---|---|---|
@@ -503,8 +500,7 @@ useEffect(() => {
 | `useContext` | Read shared data from a Provider | ✅ Yes (on context change) | Theme, auth, language |
 | Custom Hook | Reuse stateful logic | Depends on hooks inside | `useFetch`, `useToggle`, `useDebounce` |
 
-### Common mistakes checklist
-
+##### Common mistakes checklist
 - [ ] Mutating state directly instead of using the setter
 - [ ] Missing or incorrect `useEffect` dependencies
 - [ ] Forgetting cleanup for timers, listeners, and subscriptions

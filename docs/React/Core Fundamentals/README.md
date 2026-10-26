@@ -6,19 +6,7 @@ A concise guide to the five core building blocks of React: **JSX**, **Functional
 
 ---
 
-## Table of Contents
-
-1. [JSX](#1-jsx)
-2. [Functional Components](#2-functional-components)
-3. [Props & State](#3-props--state)
-4. [Conditional Rendering](#4-conditional-rendering)
-5. [Lists & Keys](#5-lists--keys)
-6. [Putting It All Together](#6-putting-it-all-together)
-7. [Quick Reference](#7-quick-reference)
-
----
-
-## 1. JSX
+#### 1. JSX
 
 **JSX** (JavaScript XML) is a syntax extension that lets you write HTML-like markup inside JavaScript. It is not required by React, but it is the standard way to describe UI. Build tools (Babel, Vite, etc.) compile it into plain JavaScript calls.
 
@@ -29,7 +17,7 @@ const element = <h1>Hello, React!</h1>;
 const element = React.createElement("h1", null, "Hello, React!");
 ```
 
-### Embedding JavaScript with `{}`
+##### Embedding JavaScript with `{}`
 
 Any valid JavaScript **expression** can go inside curly braces.
 
@@ -48,7 +36,7 @@ const card = (
 
 > Only expressions work inside `{}`. Statements like `if`, `for`, and `switch` do not.
 
-### JSX Rules
+##### JSX Rules
 
 | Rule | Example |
 |---|---|
@@ -72,7 +60,7 @@ function Profile() {
 }
 ```
 
-### Good to know
+##### Good to know
 
 - JSX **escapes** values by default, which protects against XSS attacks.
 - Components must start with an **uppercase letter** (`<Button />`). Lowercase tags are treated as HTML elements.
@@ -80,7 +68,7 @@ function Profile() {
 
 ---
 
-## 2. Functional Components
+#### 2. Functional Components
 
 A **component** is a reusable, self-contained piece of UI. A **functional component** is simply a JavaScript function that returns JSX.
 
@@ -93,7 +81,7 @@ function Greeting() {
 const Greeting = () => <h1>Welcome to React!</h1>;
 ```
 
-### Using a component
+##### Using a component
 
 ```jsx
 function App() {
@@ -106,7 +94,7 @@ function App() {
 }
 ```
 
-### Exporting and importing
+##### Exporting and importing
 
 ```jsx
 // Button.jsx
@@ -118,7 +106,7 @@ export default function Button() {
 import Button from "./Button";
 ```
 
-### Composition
+##### Composition
 
 Build complex UIs by combining small components. Use the special `children` prop to nest content.
 
@@ -137,7 +125,7 @@ function App() {
 }
 ```
 
-### Rules of components
+##### Rules of components
 
 - Name them in **PascalCase** (`UserCard`, not `userCard`).
 - Keep them **pure**: given the same props and state, return the same JSX. Don't mutate props or external variables while rendering.
@@ -146,7 +134,7 @@ function App() {
 
 ---
 
-## 3. Props & State
+#### 3. Props & State
 
 | | **Props** | **State** |
 |---|---|---|
@@ -155,7 +143,7 @@ function App() {
 | Triggers re-render | When the parent passes new values | When the setter is called |
 | Analogy | Function arguments | Variables remembered between renders |
 
-### Props
+##### Props
 
 Props flow **one way**: parent → child.
 
@@ -191,7 +179,7 @@ function Parent() {
 }
 ```
 
-### State with `useState`
+##### State with `useState`
 
 ```jsx
 import { useState } from "react";
@@ -208,7 +196,7 @@ function Counter() {
 }
 ```
 
-### State rules
+##### State rules
 
 **1. Never mutate state directly. Always use the setter.**
 
@@ -244,7 +232,7 @@ console.log(count); // still the OLD value
 
 **5. Keep state minimal.** If a value can be computed from existing state or props, compute it during render instead of storing it.
 
-### Handling input (controlled components)
+##### Handling input (controlled components)
 
 ```jsx
 function NameForm() {
@@ -260,7 +248,7 @@ function NameForm() {
 }
 ```
 
-### Lifting state up
+##### Lifting state up
 
 When two sibling components need the same data, move the state to their **closest common parent** and pass it down as props.
 
@@ -278,11 +266,11 @@ function Parent() {
 
 ---
 
-## 4. Conditional Rendering
+#### 4. Conditional Rendering
 
 React has no special syntax for conditionals. You use plain JavaScript.
 
-### Pattern 1: `if` / early return
+##### Pattern 1: `if` / early return
 
 Best for switching between entirely different outputs.
 
@@ -295,7 +283,7 @@ function Dashboard({ isLoggedIn }) {
 }
 ```
 
-### Pattern 2: Ternary operator `? :`
+##### Pattern 2: Ternary operator `? :`
 
 Best for **either/or** inside JSX.
 
@@ -303,7 +291,7 @@ Best for **either/or** inside JSX.
 <p>{isOnline ? "🟢 Online" : "⚪ Offline"}</p>
 ```
 
-### Pattern 3: Logical AND `&&`
+##### Pattern 3: Logical AND `&&`
 
 Best for **show or nothing**.
 
@@ -317,7 +305,7 @@ Best for **show or nothing**.
 > {items.length > 0 && <List />}    // ✅ use a boolean
 > ```
 
-### Pattern 4: Variable assignment
+##### Pattern 4: Variable assignment
 
 Best for multiple branches.
 
@@ -332,7 +320,7 @@ function Status({ status }) {
 }
 ```
 
-### Pattern 5: Return `null`
+##### Pattern 5: Return `null`
 
 Render nothing at all.
 
@@ -343,7 +331,7 @@ function Warning({ show }) {
 }
 ```
 
-### Pattern 6: Lookup object
+##### Pattern 6: Lookup object
 
 Cleaner than a long `if/else` or `switch` chain.
 
@@ -357,7 +345,7 @@ const views = {
 return <div>{views[status]}</div>;
 ```
 
-### Which one to use?
+##### Which one to use?
 
 | Scenario | Pattern |
 |---|---|
@@ -369,9 +357,9 @@ return <div>{views[status]}</div>;
 
 ---
 
-## 5. Lists & Keys
+#### 5. Lists & Keys
 
-### Rendering lists with `.map()`
+##### Rendering lists with `.map()`
 
 Transform an array of data into an array of JSX elements.
 
@@ -389,7 +377,7 @@ function FruitList() {
 }
 ```
 
-### Lists of objects
+##### Lists of objects
 
 ```jsx
 const users = [
@@ -409,11 +397,11 @@ function UserList() {
 }
 ```
 
-### What are keys?
+##### What are keys?
 
 A **key** is a special string or number prop that helps React identify **which items changed, were added, or were removed** between renders. This makes updates efficient and keeps component state attached to the correct item.
 
-### Key rules
+##### Key rules
 
 | Rule | Detail |
 |---|---|
@@ -423,7 +411,7 @@ A **key** is a special string or number prop that helps React identify **which i
 | **Placed on the outermost element** returned by `map` | Not on a nested child |
 | **Not passed as a prop** | `key` is not readable inside the component. Pass the value under a different name if needed |
 
-### Choosing a key
+##### Choosing a key
 
 ```jsx
 // ✅ Best: a stable unique ID from your data (database ID, UUID, slug)
@@ -438,7 +426,7 @@ A **key** is a special string or number prop that helps React identify **which i
 
 > **Why avoid index keys?** If the list is reordered, filtered, or has items inserted, indexes shift. React then mismatches items with their state, causing wrong inputs, stale values, and subtle bugs.
 
-### Fragments with keys
+##### Fragments with keys
 
 When mapping to multiple sibling elements, use the explicit `Fragment` so you can attach a key.
 
@@ -453,7 +441,7 @@ import { Fragment } from "react";
 ))}
 ```
 
-### Filtering, sorting, and empty states
+##### Filtering, sorting, and empty states
 
 ```jsx
 function TaskList({ tasks }) {
@@ -477,7 +465,7 @@ function TaskList({ tasks }) {
 
 ---
 
-## 6. Putting It All Together
+#### 6. Putting It All Together
 
 A small to-do app using all five concepts.
 
@@ -557,7 +545,7 @@ export default function TodoApp() {
 
 ---
 
-## 7. Quick Reference
+#### 7. Quick Reference
 
 ```jsx
 // JSX expression
@@ -581,7 +569,7 @@ if (!data) return null;
 {items.map((item) => <Item key={item.id} {...item} />)}
 ```
 
-### Common mistakes checklist
+##### Common mistakes checklist
 
 - [ ] Returning multiple root elements without a wrapper or Fragment
 - [ ] Using `class` instead of `className`
@@ -594,9 +582,3 @@ if (!data) return null;
 - [ ] Lowercase component names (`<card />` is treated as HTML)
 
 ---
-
-## Further Learning
-
-- [React Docs (react.dev)](https://react.dev): the official, interactive documentation
-- [Thinking in React](https://react.dev/learn/thinking-in-react)
-- [Rules of Hooks](https://react.dev/reference/rules)
