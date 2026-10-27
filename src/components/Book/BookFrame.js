@@ -13,6 +13,7 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
   const contentRef = useRef(null);
   const fxRef = useRef(null);
   const busy = useRef(false);
+  const [step, setStep] = useState(0);
   const [spread, setSpread] = useState(0);
   const [spreads, setSpreads] = useState(1);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -21,17 +22,21 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
   const {bookmarks, setBookmark, clearBookmark} = useBookmarks();
   const mine = bookmark ? bookmarks[bookmark.chapterKey] : undefined;
 
-  // distance between two spreads = visible width + column gap
-  const getStep = () => {
-    const gap = parseFloat(getComputedStyle(columnsRef.current).columnGap) || 0;
-    return viewportRef.current.clientWidth + gap;
-  };
+  // distance between two spreads = visible width + column gap 
+ const getStep = () => {
+  const cs = getComputedStyle(columnsRef.current);
+  let gap = parseFloat(cs.columnGap);
+  if (Number.isNaN(gap)) gap = parseFloat(cs.fontSize) || 0; // "normal" = 1em
+  return viewportRef.current.getBoundingClientRect().width + gap;
+};
 
   const measure = useCallback(() => {
     if (!columnsRef.current || !viewportRef.current) return;
-    const n = Math.max(1, Math.ceil(columnsRef.current.scrollWidth / getStep()));
+    const s = getStep();
+    setStep(s);
+    const n = Math.max(1, Math.ceil(columnsRef.current.scrollWidth / s));
     setSpreads(n);
-    setSpread((s) => Math.min(s, n - 1));
+    setSpread((x) => Math.min(x, n - 1));
   }, []);
 
   // recount spreads when size, fonts, images or content change
@@ -157,6 +162,7 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
       const copy = cols.cloneNode(true);
       copy.removeAttribute('style');
       copy.style.setProperty('--spread', index);
+      copy.style.transform = `translateX(${-index * getStep()}px)`;
       copy.style.transition = 'none';
       copy.querySelectorAll('[id]').forEach((n) => n.removeAttribute('id'));
       box.appendChild(copy);
@@ -237,6 +243,8 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
       <div className={styles.book}>
         <div className={styles.paper} ref={paperRef}>
           <header className={styles.header}>
+            <span className={styles.running}>{runningHead}</span>
+            <span className={clsx(styles.running, styles.runningRight)} aria-hidden="true">{runningHead}</span>
             {hasMenu && (
               <button
                 type="button"
@@ -249,8 +257,8 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
                 </svg>
               </button>
             )}
-            <span className={styles.running}>{runningHead}</span>
           </header>
+          <div className={styles.rule} aria-hidden="true" />
           {bookmark && (
             <button
               type="button"
@@ -303,10 +311,15 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
           )}
 
           <div className={styles.viewport} ref={viewportRef}>
-            <div className={styles.columns} ref={columnsRef} style={{'--spread': spread}} onClick={onContentClick}>
+            <div className={styles.columns} ref={columnsRef} 
+              style={{'--spread': spread, transform: `translateX(${-spread * step}px)`}} 
+              onClick={onContentClick}
+            >
               <div ref={contentRef} className={styles.content}>{children}</div>
             </div>
           </div>
+
+          <div className={styles.rule} aria-hidden="true" />
 
           <div className={styles.fx} ref={fxRef} aria-hidden="true" />
 
