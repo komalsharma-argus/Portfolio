@@ -21,7 +21,7 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
   const [spread, setSpread] = useState(0);
   const [spreads, setSpreads] = useState(1);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [bookmarkedHere, setBookmarkedHere] = useState(false);
+  const [savedPage, setSavedPage] = useState(-1);
 
   const {bookmarks, setBookmark, clearBookmark} = useBookmarks();
   const mine = bookmark ? bookmarks[bookmark.chapterKey] : undefined;
@@ -32,7 +32,6 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
     return Number.isNaN(gap) ? parseFloat(cs.fontSize) || 0 : gap; 
   };
 
-  // distance between two spreads = visible width + column gap 
  const getStep = () => {
   const cs = getComputedStyle(columnsRef.current);
   let gap = parseFloat(cs.columnGap);
@@ -86,10 +85,22 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
     return Math.max(0, Math.floor((x + 2) / getStep()));
   }, []);
 
-  const firstBlockOfSpread = () => {
+  const getColStep = () => {
+    const per = parseInt(getComputedStyle(columnsRef.current).columnCount, 10) || 1;
+    const gap = getGap();
+    const width = viewportRef.current.getBoundingClientRect().width;
+    return (width - gap * (per - 1)) / per + gap;
+  };
+
+  const pageOf = useCallback((el) => {
+    const x = el.getBoundingClientRect().left - columnsRef.current.getBoundingClientRect().left;
+    return Math.max(0, Math.floor((x + 2) / getColStep()));
+  }, []);
+
+  const firstBlockOfPage = (p) => {
     const blocks = [...blocksRoot().children];
     const left = columnsRef.current.getBoundingClientRect().left;
-    const start = spread * getStep() - 2;
+    const start = p * getColStep() - 2;
     const i = blocks.findIndex((el) => el.getBoundingClientRect().left - left >= start);
     return i === -1 ? Math.max(0, blocks.length - 1) : i;
   };
@@ -108,22 +119,25 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
     setSpread(spreadOf(el));
     setMenuOpen(false);
   }, [spreadOf]);
-
+  
   useEffect(() => {
     if (!bookmark || !mine || mine.path !== bookmark.path) {
-      setBookmarkedHere(false);
+      setSavedPage(-1);
       return;
     }
     const el = blocksRoot().children[mine.block];
-    setBookmarkedHere(el ? spreadOf(el) === spread : false);
-  }, [bookmark?.path, mine, spread, spreads, spreadOf]); // eslint-disable-line react-hooks/exhaustive-deps
+    setSavedPage(el ? pageOf(el) : -1);
+  }, [bookmark?.path, mine, spread, spreads, pages, perSpread, pageOf]);
 
-  const toggleBookmark = () => {
+  const onThisSpread = savedPage >= 0 && Math.floor(savedPage / perSpread) === spread;
+
+  const toggleBookmark = (side) => {
     if (!bookmark) return;
-    if (bookmarkedHere) {
+    const page = spread * perSpread + side;
+    if (savedPage === page) {
       clearBookmark(bookmark.chapterKey);
     } else {
-      setBookmark(bookmark.chapterKey, {path: bookmark.path, block: firstBlockOfSpread(), savedAt: Date.now()});
+      setBookmark(bookmark.chapterKey, {path: bookmark.path, block: firstBlockOfPage(page), savedAt: Date.now()});
     }
   };
 
@@ -314,16 +328,21 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
             )}
           </header>
           <div className={styles.rule} aria-hidden="true" />
-          {bookmark && (
-            <button
-              type="button"
-              className={clsx(styles.ribbon, bookmarkedHere && styles.ribbonOn)}
-              onClick={toggleBookmark}
-              aria-pressed={bookmarkedHere}
-              aria-label={bookmarkedHere ? 'Remove bookmark' : 'Bookmark this page'}
-              title={bookmarkedHere ? 'Remove bookmark' : mine ? 'Move bookmark here' : 'Bookmark this page'}
-            />
-          )}
+          {bookmark && (perSpread === 2 ? [0, 1] : [0]).map((side, i, all) => {
+            const on = savedPage === spread * perSpread + side;
+            const last = i === all.length - 1; // the ribbon next to the menu button
+            return (
+              <button
+                key={side}
+                type="button"
+                className={clsx(styles.ribbon, last ? styles.ribbonRight : styles.ribbonLeft, on && styles.ribbonOn)}
+                onClick={() => toggleBookmark(side)}
+                aria-pressed={on}
+                aria-label={on ? 'Remove bookmark' : 'Bookmark this page'}
+                title={on ? 'Remove bookmark' : mine ? 'Move bookmark here' : 'Bookmark this page'}
+              />
+            );
+          })}
 
           <div className={clsx(styles.scrim, menuOpen && styles.scrimOpen)} onClick={() => setMenuOpen(false)} />
           <aside
@@ -341,7 +360,7 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
               <Link to="/docs/intro" className={styles.menuLink}>← Table of Contents</Link>
             )}
 
-            {bookmark && mine && !bookmarkedHere &&
+            {bookmark && mine && !onThisSpread &&
               (mine.path === bookmark.path ? (
                 <button type="button" className={styles.menuLink} onClick={() => goToBlock(mine.block)}>
                   Go to bookmark

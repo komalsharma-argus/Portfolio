@@ -59,6 +59,7 @@
   letter-spacing: 0.12rem;
   text-transform: uppercase;
   opacity: 0.6;
+  padding-right: 1.75rem;
 }
 .runningRight {
   padding-right: 4.5rem;
@@ -201,6 +202,8 @@ button.menuLink {
 .ribbon:hover { height: 42px; background: rgba(0, 0, 0, 0.35); }
 .ribbonOn { height: 44px; background: #9b2d30; }
 .ribbonOn:hover { height: 48px; background: #b23a3d; }
+.ribbon.ribbonLeft  { right: calc(50% + var(--gap, 3.5rem) / 2); }
+.ribbon.ribbonRight { right: calc(var(--outer, 1.25rem) + 2.4rem); }
 :global([data-theme='dark']) .ribbon { background: #6a5d4c; }
 :global([data-theme='dark']) .ribbon:hover { background: #8a7a63; }
 :global([data-theme='dark']) .ribbonOn { background: #b5403f; }
