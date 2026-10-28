@@ -269,6 +269,13 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
 
   const hasMenu = showBack || toc.length > 0;
 
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e) => e.key === 'Escape' && setMenuOpen(false);
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [menuOpen]);
+
   const leftNo = shown * perSpread + 1;
   const rightNo = leftNo + 1;
   const showRight = perSpread === 2 && rightNo <= pages;
@@ -318,46 +325,52 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
             />
           )}
 
-          {menuOpen && (
-            <>
-              <div className={styles.scrim} onClick={() => setMenuOpen(false)} />
-              <nav className={styles.menu}>
-                {showBack && (
-                  <Link to="/docs/intro" className={styles.menuLink}>← Table of Contents</Link>
-                )}
-                {bookmark && mine && !bookmarkedHere &&
-                  (mine.path === bookmark.path ? (
-                    <button type="button" className={styles.menuLink} onClick={() => goToBlock(mine.block)}>
-                      Go to bookmark
-                    </button>
-                  ) : (
-                    <Link to={`${mine.path}?bm=${mine.block}`} className={styles.menuLink}>
-                      Go to bookmark →
-                    </Link>
-                  ))}
-                {toc.length > 0 && (
-                  <>
-                    <p className={styles.menuLabel}>On this page</p>
-                    <ul className={styles.menuList}>
-                      {toc.map((item) => (
-                        <li key={item.id} className={item.level === 3 ? styles.indent : undefined}>
-                          <a
-                            href={`#${item.id}`}
-                            onClick={(e) => {
-                              e.preventDefault();
-                              goToHeading(item.id);
-                            }}
-                            dangerouslySetInnerHTML={{__html: item.value}}
-                          />
-                        </li>
-                      ))}
-                    </ul>
-                  </>
-                )}
-              </nav>
-            </>
-          )}
+          <div className={clsx(styles.scrim, menuOpen && styles.scrimOpen)} onClick={() => setMenuOpen(false)} />
+          <aside
+            className={clsx(styles.sidebar, menuOpen && styles.sidebarOpen)}
+            aria-hidden={!menuOpen}
+            aria-label="Page contents">
+            <div className={styles.sideHead}>
+              <span className={styles.sideTitle}>{runningHead}</span>
+              <button type="button" className={styles.sideClose} aria-label="Close" onClick={() => setMenuOpen(false)}>
+                &times;
+              </button>
+            </div>
 
+            {showBack && (
+              <Link to="/docs/intro" className={styles.menuLink}>← Table of Contents</Link>
+            )}
+
+            {bookmark && mine && !bookmarkedHere &&
+              (mine.path === bookmark.path ? (
+                <button type="button" className={styles.menuLink} onClick={() => goToBlock(mine.block)}>
+                  Go to bookmark
+                </button>
+              ) : (
+                <Link to={`${mine.path}?bm=${mine.block}`} className={styles.menuLink}>
+                  Go to bookmark →
+                </Link>
+              ))}
+            {toc.length > 0 && (
+              <>
+                <p className={styles.menuLabel}>On this page</p>
+                <ul className={styles.menuList}>
+                  {toc.map((item) => (
+                    <li key={item.id} className={item.level === 3 ? styles.indent : undefined}>
+                      <a
+                        href={`#${item.id}`}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          goToHeading(item.id);
+                        }}
+                        dangerouslySetInnerHTML={{__html: item.value}}
+                      />
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+          </aside>
           <div className={styles.viewport} ref={viewportRef}>
             <div 
               className={styles.columns} 
