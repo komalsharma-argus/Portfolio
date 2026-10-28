@@ -13,7 +13,11 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
   const contentRef = useRef(null);
   const fxRef = useRef(null);
   const busy = useRef(false);
+  const holdNumbers = useRef(false);
+  const [pages, setPages] = useState(1);
+  const [perSpread, setPerSpread] = useState(2);
   const [step, setStep] = useState(0);
+  const [shown, setShown] = useState(0);
   const [spread, setSpread] = useState(0);
   const [spreads, setSpreads] = useState(1);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -21,6 +25,12 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
 
   const {bookmarks, setBookmark, clearBookmark} = useBookmarks();
   const mine = bookmark ? bookmarks[bookmark.chapterKey] : undefined;
+
+  const getGap = () => {
+    const cs = getComputedStyle(columnsRef.current);
+    const gap = parseFloat(cs.columnGap);
+    return Number.isNaN(gap) ? parseFloat(cs.fontSize) || 0 : gap; 
+  };
 
   // distance between two spreads = visible width + column gap 
  const getStep = () => {
@@ -31,12 +41,20 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
 };
 
   const measure = useCallback(() => {
-    if (!columnsRef.current || !viewportRef.current) return;
-    const s = getStep();
-    setStep(s);
-    const n = Math.max(1, Math.ceil(columnsRef.current.scrollWidth / s));
+    const cols = columnsRef.current;
+    const vp = viewportRef.current;
+    if (!cols || !vp) return;
+    const per = parseInt(getComputedStyle(cols).columnCount, 10) || 1;
+    const gap = getGap();
+    const width = vp.getBoundingClientRect().width;
+    const colW = (width - gap * (per - 1)) / per;
+    const total = Math.max(1, Math.round((cols.scrollWidth + gap) / (colW + gap)));
+    const n = Math.max(1, Math.ceil(total / per));
+    setStep(width + gap);
+    setPerSpread(per);
+    setPages(total);
     setSpreads(n);
-    setSpread((x) => Math.min(x, n - 1));
+    setSpread((s) => Math.min(s, n - 1));
   }, []);
 
   // recount spreads when size, fonts, images or content change
@@ -57,6 +75,10 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
     };
   }, [measure]);
 
+  useEffect(() => {
+    if (!holdNumbers.current) setShown(spread);
+  }, [spread]);
+
   const blocksRoot = () => contentRef.current.querySelector('.markdown') || contentRef.current;
 
   const spreadOf = useCallback((el) => {
@@ -76,8 +98,7 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
   const goToHeading = useCallback((id) => {
     const el = document.getElementById(id);
     if (!el || !columnsRef.current?.contains(el)) return;
-    const x = el.getBoundingClientRect().left - columnsRef.current.getBoundingClientRect().left;
-    setSpread(Math.max(0, Math.floor((x + 2) / getStep())));
+    setSpread(spreadOf(el));
     setMenuOpen(false);
   }, [spreadOf]);
 
@@ -131,19 +152,21 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
     if (busy.current || target < 0 || target >= spreads) return;
 
     const cols = columnsRef.current;
-    const twoPages = getComputedStyle(cols).columnCount === '2';
+    // const twoPages = getComputedStyle(cols).columnCount === '2';
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!twoPages || reduced) {
+    if (perSpread !== 2 || reduced) {
       setSpread(target); // one-page layout or reduced motion: plain slide
       return;
     }
 
     busy.current = true;
+    holdNumbers.current = true;
     const fx = fxRef.current;
     const pr = paperRef.current.getBoundingClientRect();
     const vr = viewportRef.current.getBoundingClientRect();
     const half = pr.width / 2;
     const vx = vr.left - pr.left; // reading area offset inside the paper
+    const stepPx = getStep();
 
     const make = (className, css) => {
       const node = document.createElement('div');
@@ -161,7 +184,7 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
       });
       const copy = cols.cloneNode(true);
       copy.removeAttribute('style');
-      copy.style.setProperty('--spread', index);
+      // copy.style.setProperty('--spread', index);
       copy.style.transform = `translateX(${-index * getStep()}px)`;
       copy.style.transition = 'none';
       copy.querySelectorAll('[id]').forEach((n) => n.removeAttribute('id'));
@@ -202,9 +225,17 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
       flipper.style.transform = `rotateY(${dir > 0 ? -180 : 180}deg)`;
     });
 
+    const mid = setTimeout(() => {
+      holdNumbers.current = false;
+      setShown(target);
+    }, FLIP_MS/2);
+
     let timer;
     const done = () => {
       clearTimeout(timer);
+      clearTimeout(mid);
+      holdNumbers.current = false;
+      setShown(target);
       flipper.removeEventListener('transitionend', onEnd);
       fx.replaceChildren();
       cols.style.transition = '';
@@ -226,7 +257,7 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [spread, spreads]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [spread, spreads, perSpread]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // in-content #links (heading anchors, footnotes)
   const onContentClick = (e) => {
@@ -237,6 +268,23 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
   };
 
   const hasMenu = showBack || toc.length > 0;
+
+  const leftNo = shown * perSpread + 1;
+  const rightNo = leftNo + 1;
+  const showRight = perSpread === 2 && rightNo <= pages;
+
+  const prevArrow =
+    spread > 0 ? (
+    <button type="button" className={styles.arrow} aria-label="Previous page" title="Previous page" onClick={() => flip(-1)}>‹ Previous</button>
+    ) : prev ? (
+    <Link to={prev.permalink} className={styles.arrow} aria-label={`Previous topic: ${prev.title}`} title={`Previous: ${prev.title}`}> {prev.title}</Link>
+    ) : null;
+    const nextArrow =
+    spread < spreads - 1 ? (
+    <button type="button" className={styles.arrow} aria-label="Next page" title="Next page" onClick={() => flip(1)}>Next ›</button>
+    ) : next ? (
+    <Link to={next.permalink} className={styles.arrow} aria-label={`Next topic: ${next.title}`} title={`Next: ${next.title}`}>{next.title}</Link>
+    ) : null;
 
   return (
     <div className={styles.desk} data-book-root>
@@ -311,7 +359,9 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
           )}
 
           <div className={styles.viewport} ref={viewportRef}>
-            <div className={styles.columns} ref={columnsRef} 
+            <div 
+              className={styles.columns} 
+              ref={columnsRef} 
               style={{'--spread': spread, transform: `translateX(${-spread * step}px)`}} 
               onClick={onContentClick}
             >
@@ -324,21 +374,14 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
           <div className={styles.fx} ref={fxRef} aria-hidden="true" />
 
           <footer className={styles.footer}>
-            {spread > 0 ? (
-              <button type="button" className={styles.navBtn} onClick={() => flip(-1)}>‹ Previous</button>
-            ) : prev ? (
-              <Link to={prev.permalink} className={styles.navBtn}>‹ {prev.title}</Link>
-            ) : (
-              <span />
-            )}
-            <span className={styles.counter}>{spread + 1} / {spreads}</span>
-            {spread < spreads - 1 ? (
-              <button type="button" className={styles.navBtn} onClick={() => flip(1)}>Next ›</button>
-            ) : next ? (
-              <Link to={next.permalink} className={styles.navBtn}>{next.title} ›</Link>
-            ) : (
-              <span />
-            )}
+            <div className={styles.footCell}>
+              <span className={styles.pageNo}>{leftNo}</span>
+              {prevArrow}
+            </div>
+            <div className={clsx(styles.footCell, styles.footRight)}>
+              {nextArrow}
+              {showRight && <span className={styles.pageNo}>{rightNo}</span>}
+            </div>
           </footer>
         </div>
       </div>
