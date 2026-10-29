@@ -296,15 +296,15 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
 
   const prevArrow =
     spread > 0 ? (
-    <button type="button" className={styles.arrow} aria-label="Previous page" title="Previous page" onClick={() => flip(-1)}>‹ Previous</button>
+    <button type="button" className={styles.arrow} aria-label="Previous page" title="Previous page" onClick={() => flip(-1)}> ‹ </button>
     ) : prev ? (
-    <Link to={prev.permalink} className={styles.arrow} aria-label={`Previous topic: ${prev.title}`} title={`Previous: ${prev.title}`}> {prev.title}</Link>
+    <Link to={prev.permalink} className={styles.arrow} aria-label={`Previous topic: ${prev.title}`} title={`Previous: ${prev.title}`}>‹ {prev.title}</Link>
     ) : null;
     const nextArrow =
     spread < spreads - 1 ? (
-    <button type="button" className={styles.arrow} aria-label="Next page" title="Next page" onClick={() => flip(1)}>Next ›</button>
+    <button type="button" className={styles.arrow} aria-label="Next page" title="Next page" onClick={() => flip(1)}> › </button>
     ) : next ? (
-    <Link to={next.permalink} className={styles.arrow} aria-label={`Next topic: ${next.title}`} title={`Next: ${next.title}`}>{next.title}</Link>
+    <Link to={next.permalink} className={styles.arrow} aria-label={`Next topic: ${next.title}`} title={`Next: ${next.title}`}>{next.title} ›</Link>
     ) : null;
 
   return (
@@ -322,7 +322,9 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
                 aria-expanded={menuOpen}
                 onClick={() => setMenuOpen((o) => !o)}>
                 <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true">
-                  <path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                  <circle cx="10" cy="4" r="1.8" fill="currentColor" />
+                  <circle cx="10" cy="10" r="1.8" fill="currentColor" />
+                  <circle cx="10" cy="16" r="1.8" fill="currentColor" />
                 </svg>
               </button>
             )}
