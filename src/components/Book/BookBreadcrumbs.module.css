@@ -1,0 +1,15 @@
+.crumbs {
+  display: flex; align-items: center; gap: 0.35rem;
+  min-width: 0; margin-left: 0.5rem; padding-left: 0.9rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.25);
+  font-size: 0.9rem; white-space: nowrap;
+  color: var(--ifm-navbar-link-color);
+}
+.home { display: inline-flex; color: inherit; }
+.home:hover, .crumb:hover { color: var(--ifm-navbar-link-hover-color); text-decoration: none; }
+.sep { flex: none; opacity: 0.55; }
+.crumb { max-width: 14rem; overflow: hidden; text-overflow: ellipsis; color: inherit; }
+span.crumb { opacity: 0.85; } /* plain text: a folder with no page of its own */
+.current { font-weight: 700; opacity: 1; }
+.mobile { flex-wrap: wrap; margin: 0; padding: 0.5rem var(--ifm-menu-link-padding-horizontal, 1rem); border-left: 0; white-space: normal; }
+@media (max-width: 1200px) { .crumb { max-width: 9rem; } }
