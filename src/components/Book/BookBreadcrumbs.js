@@ -31,19 +31,18 @@ function buildTrail(pathname, docs) {
   if (pathname === '/') return null; // landing page: no trail
   if (pathname === '/docs/intro') return [{label: 'Contents'}];
 
+  const chapter = chapters.find((c) => clean(c.link) === pathname);
+  if(chapter) return [{label: chapter.title}];
+
   const doc = docs.find((d) => clean(d.path) === pathname);
-  if (!doc) {
-    // the generated chapter overview pages
-    const chapter = chapters.find((c) => clean(c.link) === pathname);
-    return chapter ? [{label: chapter.title}] : null;
-  }
+  if (!doc) return null;
 
   // doc id = folders + file name; the file name is dropped when it only stands for its folder
   const segs = doc.id.split('/');
   const file = segs[segs.length - 1];
   const folders = segs.slice(0, -1);
   const parent = folders[folders.length - 1];
-  const isIndex = parent && ['readme', 'index', parent.toLowerCase()].includes(file.toLowerCase());
+  const isIndex = parent && ['readme', 'index','overview', parent.toLowerCase()].includes(file.toLowerCase());
   const soleDoc = parent && docs.filter((d) => d.id.startsWith(`${folders.join('/')}/`)).length === 1;
   const names = isIndex || soleDoc ? folders : [...folders, file];
 
