@@ -3,13 +3,13 @@
     "number": 1,
     "key": "PostgreSQL",
     "title": "PostgreSQL",
-    "link": "/docs/overview/postgresql"
+    "link": "/docs/PostgreSQL"
   },
   {
     "number": 2,
     "key": "JavaScript",
     "title": "JavaScript",
-    "link": "/docs/overview/javascript"
+    "link": "/docs/JavaScript"
   },
   {
     "number": 3,
@@ -20,14 +20,14 @@
   {
     "number": 4,
     "key": "NodeJS",
-    "title": "Node.js",
-    "link": "/docs/overview/nodejs"
+    "title": "NodeJS",
+    "link": "/docs/NodeJS"
   },
   {
     "number": 5,
     "key": "React",
     "title": "React",
-    "link": "/docs/overview/react"
+    "link": "/docs/React"
   },
   {
     "number": 6,
@@ -50,13 +50,13 @@
   {
     "number": 9,
     "key": "OWASP-Top-10",
-    "title": "OWASP Top 10 (2025)",
+    "title": "2025-OWASP-Top-10",
     "link": "/docs/OWASP-Top-10"
   },
   {
     "number": 10,
     "key": "AZ-900-Ms-Azure-Fundamentals",
-    "title": "AZ-900: Azure Fundamentals",
+    "title": "AZ-900-Ms-Azure-Fundamentals",
     "link": "/docs/AZ-900-Ms-Azure-Fundamentals"
   }
 ]

@@ -8,6 +8,7 @@ import BookSearch from './BookSearch';
 import {highlightTerms, clearHighlights} from './highlight';
 
 const FLIP_MS = 900;
+const SLIM_FROM = 120;
 
 export default function BookFrame({runningHead, toc = [], showBack = true, prev, next, bookmark = null, searchChapter, children}) {
   const paperRef = useRef(null);
@@ -159,14 +160,6 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
     };
   }, [goToBlock]);
 
-  // open directly at a #hash
-  // useEffect(() => {
-  //   if (!window.location.hash) return;
-  //   const t = setTimeout(() => goToHeading(decodeURIComponent(window.location.hash.slice(1))), 450);
-  //   return () => clearTimeout(t);
-  // }, [goToHeading]);
-
-  // arriving from search (?hl=words#section) or from a #link: highlight, then show the page
     useEffect(() => {
       const terms = (new URLSearchParams(location.search).get('hl') || '').split(/\s+/).filter(Boolean);
       const hash = location.hash ? decodeURIComponent(location.hash.slice(1)) : '';
@@ -222,7 +215,55 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
       Object.assign(node.style, css);
       return node;
     };
-    // a copy of the whole reading area, showing a given spread, placed inside a page
+    // a copy of the reading area showing one spread. Long texts: only the blocks on that spread
+    const copyOfSpread = (index) => {
+      const root = blocksRoot();
+      const blocks = [...root.children];
+      const finish = (shell) => {
+        shell.removeAttribute('style');
+        shell.style.transition = 'none';
+        shell.style.transform = `translateX(${-index * stepPx}px)`;
+        shell.querySelectorAll('[id]').forEach((n) => n.removeAttribute('id'));
+        return shell;
+      };
+      if (blocks.length < SLIM_FROM) return finish(cols.cloneNode(true));
+
+      const colsRect = cols.getBoundingClientRect();
+      const colStep = getColStep();
+      const from = index * stepPx - 2;
+      const to = (index + 1) * stepPx - 2;
+
+      const spans = blocks.map((el) => {
+        const rects = el.getClientRects();
+        if (!rects.length) return {el, x: -Infinity, y: 0, right: -Infinity};
+        const a = rects[0]; // where the block starts
+        const b = rects[rects.length - 1]; // where it ends
+        return {el, x: a.left - colsRect.left, y: a.top - colsRect.top, right: b.right - colsRect.left};
+      });
+      const inside = spans.filter((s) => s.right > from && s.x < to);
+      if (!inside.length) return finish(cols.cloneNode(false));
+
+      // a spacer stands in for everything before the first copied block
+      const first = inside[0];
+      const col = Math.floor((first.x + 2) / colStep);
+      const marginTop = parseFloat(getComputedStyle(first.el).marginTop) || 0;
+      const spacer = document.createElement('div');
+      spacer.style.height = `${Math.max(0, col * colsRect.height + first.y - marginTop)}px`;
+
+      const shell = cols.cloneNode(false);
+      let parent = shell;
+      const chain = [];
+      for (let el = root; el && el !== cols; el = el.parentElement) chain.unshift(el);
+      chain.forEach((el) => {
+        const copy = el.cloneNode(false);
+        parent.appendChild(copy);
+        parent = copy;
+      });
+      parent.appendChild(spacer);
+      inside.forEach((s) => parent.appendChild(s.el.cloneNode(true)));
+      return finish(shell);
+    };
+
     const replica = (index, left) => {
       const box = make(styles.replica, {
         left: `${left}px`,
@@ -230,13 +271,7 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
         width: `${vr.width}px`,
         height: `${vr.height}px`,
       });
-      const copy = cols.cloneNode(true);
-      copy.removeAttribute('style');
-      // copy.style.setProperty('--spread', index);
-      copy.style.transform = `translateX(${-index * getStep()}px)`;
-      copy.style.transition = 'none';
-      copy.querySelectorAll('[id]').forEach((n) => n.removeAttribute('id'));
-      box.appendChild(copy);
+      box.appendChild(copyOfSpread(index));
       return box;
     };
     const face = (className, content) => {

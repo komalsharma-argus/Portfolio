@@ -82,7 +82,7 @@ export default function BookBreadcrumbs({mobile}) {
 
   return (
     <nav className={clsx(styles.crumbs, mobile && styles.mobile)} aria-label="Breadcrumb">
-      <Link to="/" className={styles.home} aria-label="Home" title="Home"><HomeIcon /></Link>
+      <Link to="/docs/intro/" className={styles.home} aria-label="Contents" title="Contents"><HomeIcon /></Link>
       {trail.map((c, i) => {
         const last = i === trail.length - 1;
         return (
