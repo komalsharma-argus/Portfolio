@@ -1,0 +1,93 @@
+.root {
+  --panel-bg: #fbf4e4;
+  --panel-ink: #2d2318;
+  --panel-line: rgba(45, 35, 24, 0.25);
+  --panel-hover: #eadfc4;
+  --mark: #f3d36b;
+  position: relative; display: inline-flex; align-items: center;
+  font-family: Georgia, 'Iowan Old Style', serif;
+}
+:global([data-theme='dark']) .root {
+  --panel-bg: #29241f;
+  --panel-ink: #e9e0d0;
+  --panel-line: rgba(233, 224, 208, 0.25);
+  --panel-hover: #3a332c;
+  --mark: rgba(227, 194, 122, 0.45);
+}
+.page { position: absolute; top: 50%; right: 2.25rem; transform: translateY(-50%); } /* inside the page header */
+.icon { flex: none; }
+
+/* the icon button: page header always, navbar on small screens */
+.trigger {
+  display: none; align-items: center; justify-content: center;
+  width: 1.75rem; height: 1.75rem; padding: 0;
+  color: inherit; background: transparent; border: 1px solid currentColor; border-radius: 5px;
+  opacity: 0.8; cursor: pointer;
+}
+.trigger:hover { opacity: 1; }
+.page .trigger { display: inline-flex; }
+
+.sheet { position: relative; }
+.field {
+  display: flex; align-items: center; gap: 0.4rem; box-sizing: border-box;
+  width: 14rem; height: 2rem; padding: 0 0.65rem;
+  color: inherit; background: rgba(255, 255, 255, 0.14); border-radius: 999px;
+  transition: width 0.2s, background 0.2s;
+}
+.field:focus-within { width: 20rem; background: rgba(255, 255, 255, 0.22); }
+.input { flex: 1; min-width: 0; font: inherit; font-size: 0.9rem; color: inherit; background: transparent; border: 0; outline: 0; }
+.input::placeholder { color: inherit; opacity: 0.65; }
+.close {
+  display: none; align-items: center; justify-content: center;
+  width: 1.5rem; height: 1.5rem; padding: 0;
+  font-size: 1.2rem; line-height: 1; color: inherit; background: transparent; border: 0; cursor: pointer;
+}
+
+/* chapter search: a popover under the icon */
+.page .sheet {
+  display: none; position: absolute; top: calc(100% + 0.4rem); right: 0; z-index: 20;
+  width: min(32rem, 92vw); padding: 0.6rem; border-radius: 10px;
+  color: var(--panel-ink); background: var(--panel-bg);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--panel-line);
+}
+.page.open .sheet { display: block; }
+.page .field, .page .field:focus-within { width: 100%; background: rgba(0, 0, 0, 0.06); }
+.page .close { display: inline-flex; }
+.scope { margin: 0.5rem 0.25rem 0; font-size: 0.8rem; opacity: 0.8; }
+.widen { padding: 0; font: inherit; color: inherit; text-decoration: underline; background: none; border: 0; cursor: pointer; }
+.widen:hover { color: var(--ifm-color-primary); }
+
+/* results */
+.results {
+  position: absolute; top: calc(100% + 0.5rem); right: 0; z-index: 20; box-sizing: border-box;
+  width: min(32rem, 92vw); max-height: min(70vh, 32rem); overflow-y: auto; padding: 0.5rem;
+  color: var(--panel-ink); background: var(--panel-bg); border-radius: 10px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--panel-line);
+  font-size: 0.9rem; text-align: left;
+}
+.page .results { position: static; width: auto; max-height: 50vh; margin-top: 0.5rem; padding: 0; background: transparent; box-shadow: none; }
+.results mark { color: inherit; background: var(--mark); border-radius: 2px; }
+.group { margin: 0.5rem 0.25rem 0.2rem; font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.65; }
+.item {
+  display: block; width: 100%; padding: 0.45rem 0.6rem;
+  font: inherit; color: inherit; text-align: left; background: transparent; border: 0; border-radius: 6px; cursor: pointer;
+}
+.item[aria-selected='true'], .item:hover { background: var(--panel-hover); }
+.where { font-weight: 700; }
+.heading { opacity: 0.8; }
+.snippet { display: block; margin-top: 0.15rem; font-size: 0.82rem; line-height: 1.35; opacity: 0.85; }
+.status { margin: 0; padding: 0.75rem 0.5rem; opacity: 0.75; }
+
+/* small screens: the navbar box becomes an icon that opens a full-width sheet */
+@media (max-width: 996px) {
+  .navbar .trigger { display: inline-flex; }
+  .navbar .sheet { display: none; }
+  .navbar.open .sheet {
+    display: block; position: fixed; top: var(--ifm-navbar-height); left: 0; right: 0; bottom: 0; z-index: 300;
+    box-sizing: border-box; padding: 0.75rem; overflow-y: auto;
+    color: var(--panel-ink); background: var(--panel-bg);
+  }
+  .navbar .field, .navbar .field:focus-within { width: 100%; background: rgba(0, 0, 0, 0.06); }
+  .navbar .close { display: inline-flex; }
+  .navbar .results { position: static; width: auto; max-height: none; margin-top: 0.5rem; padding: 0; background: transparent; box-shadow: none; }
+}

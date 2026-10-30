@@ -47,10 +47,13 @@
   );
 }
 
+.hit { background: #f3d36b; color: inherit; border-radius: 2px; padding: 0 1px; }
+:global([data-theme='dark']) .hit { background: rgba(227, 194, 122, 0.45); }
+
 /* top bar */
 .header { 
   position: relative; 
-  z-index: 3; 
+  z-index: 4; 
   display: grid; 
   grid-template-columns: 1fr 1fr;
   column-gap: var(--gap);
@@ -70,7 +73,7 @@
   padding-right: 1.75rem;
 }
 .runningRight {
-  padding-right: 4.5rem;
+  padding-right: 7.5rem;
 }
 .menuBtn {
   position: absolute; top: 50%; right: 0; transform: translateY(-50%);
@@ -213,7 +216,7 @@ button.menuLink {
 .ribbonOn { background: #9b2d30; }
 .ribbonOn:hover { background: #b23a3d; }
 .ribbon.ribbonLeft  { right: calc(50% + var(--gap, 3.5rem) / 2); }
-.ribbon.ribbonRight { right: calc(var(--outer, 1.25rem) + 2.4rem); }
+.ribbon.ribbonRight { right: calc(var(--outer, 1.25rem) + 4.5rem); }
 :global([data-theme='dark']) .ribbon { background: #6a5d4c; }
 :global([data-theme='dark']) .ribbon:hover { background: #8a7a63; }
 :global([data-theme='dark']) .ribbonOn { background: #b5403f; }

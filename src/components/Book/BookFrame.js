@@ -3,10 +3,13 @@ import Link from '@docusaurus/Link';
 import styles from './BookFrame.module.css';
 import clsx from 'clsx';
 import useBookmarks from './useBookmarks';
+import {useLocation} from '@docusaurus/router';
+import BookSearch from './BookSearch';
+import {highlightTerms, clearHighlights} from './highlight';
 
 const FLIP_MS = 900;
 
-export default function BookFrame({runningHead, toc = [], showBack = true, prev, next, bookmark = null, children}) {
+export default function BookFrame({runningHead, toc = [], showBack = true, prev, next, bookmark = null, searchChapter, children}) {
   const paperRef = useRef(null);
   const viewportRef = useRef(null);
   const columnsRef = useRef(null);
@@ -22,6 +25,8 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
   const [spreads, setSpreads] = useState(1);
   const [menuOpen, setMenuOpen] = useState(false);
   const [savedPage, setSavedPage] = useState(-1);
+
+  const location = useLocation();
 
   const {bookmarks, setBookmark, clearBookmark} = useBookmarks();
   const mine = bookmark ? bookmarks[bookmark.chapterKey] : undefined;
@@ -155,11 +160,40 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
   }, [goToBlock]);
 
   // open directly at a #hash
-  useEffect(() => {
-    if (!window.location.hash) return;
-    const t = setTimeout(() => goToHeading(decodeURIComponent(window.location.hash.slice(1))), 450);
-    return () => clearTimeout(t);
-  }, [goToHeading]);
+  // useEffect(() => {
+  //   if (!window.location.hash) return;
+  //   const t = setTimeout(() => goToHeading(decodeURIComponent(window.location.hash.slice(1))), 450);
+  //   return () => clearTimeout(t);
+  // }, [goToHeading]);
+
+  // arriving from search (?hl=words#section) or from a #link: highlight, then show the page
+    useEffect(() => {
+      const terms = (new URLSearchParams(location.search).get('hl') || '').split(/\s+/).filter(Boolean);
+      const hash = location.hash ? decodeURIComponent(location.hash.slice(1)) : '';
+      if (!terms.length && !hash) return undefined;
+      const t = setTimeout(() => {
+        const marks = highlightTerms(contentRef.current, terms, styles.hit);
+        const heading = hash ? document.getElementById(hash) : null;
+        // the first match inside the chosen section, otherwise the first match on the page
+        const target = marks.length
+          ? (heading && marks.find((m) => heading.compareDocumentPosition(m) & Node.DOCUMENT_POSITION_FOLLOWING)) || marks[0]
+          : null;
+        if (target) {
+          setSpread(spreadOf(target));
+          setMenuOpen(false);
+        } else if (hash) {
+          goToHeading(hash);
+        }
+      }, 450);
+      return () => clearTimeout(t);
+    }, [location.key, location.search, location.hash]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    // Esc clears the highlights
+    useEffect(() => {
+      const onKey = (e) => e.key === 'Escape' && clearHighlights(contentRef.current, styles.hit);
+      window.addEventListener('keydown', onKey);
+      return () => window.removeEventListener('keydown', onKey);
+    }, []);
 
   const flip = (dir) => {
     const target = spread + dir;
@@ -328,6 +362,7 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
                 </svg>
               </button>
             )}
+            <BookSearch variant="page" chapter={searchChapter} />
           </header>
           <div className={styles.rule} aria-hidden="true" />
           {bookmark && (perSpread === 2 ? [0, 1] : [0]).map((side, i, all) => {

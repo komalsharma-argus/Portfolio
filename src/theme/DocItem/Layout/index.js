@@ -23,6 +23,7 @@ export default function DocItemLayout({children}) {
       key={metadata.id}
       runningHead={runningHead}
       toc={toc}
+      searchChapter={chapter?.key}
       bookmark={bookmark}
       showBack={!isIntro}
       prev={metadata.previous}

@@ -64,6 +64,7 @@ export default function DocCategoryGeneratedIndexPage({categoryGeneratedIndex}) 
       <PageMetadata title={categoryGeneratedIndex.title} description={categoryGeneratedIndex.description} />
       <BookFrame
         key={categoryGeneratedIndex.permalink}
+        searchChapter={chapter?.key}
         runningHead={chapter ? `Chapter ${chapter.number} · ${title}` : title}
         showBack
         prev={nav.previous}

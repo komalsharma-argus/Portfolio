@@ -100,6 +100,7 @@ const config = {
         // ],
         items: [
           {type: 'custom-bookBreadcrumbs', position: 'left'},
+          {type: 'custom-bookSearch', position: 'right'},
           {href: 'https://github.com/komalsharma-argus/Portfolio', label: 'GitHub', position: 'right'},
         ],
       },
