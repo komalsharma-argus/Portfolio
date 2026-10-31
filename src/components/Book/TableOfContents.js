@@ -4,8 +4,10 @@ import chapters from '@site/src/data/chapters.json';
 import styles from './TableOfContents.module.css';
 import useBookmarks from './useBookmarks';
 import TurnLink from './TurnLink';
+import {usePageCounts} from './pageCounts';
 
 export default function TableOfContents() {
+  const {starts} = usePageCounts();
   const {bookmarks} = useBookmarks();
   return (
     <nav aria-label="Table of Contents">
@@ -19,6 +21,7 @@ export default function TableOfContents() {
               <span className={styles.num}>{String(c.number).padStart(2, '0')}</span>
               <span>{c.title}</span>
               <span className={styles.dots} aria-hidden="true" />
+              <span className={styles.pg}>{starts[c.key] ?? ''}</span>
             </TurnLink>
             {bm && (
               <TurnLink to={`${bm.path}?bm=${bm.block}`} className={styles.resume}>Resume ›</TurnLink>

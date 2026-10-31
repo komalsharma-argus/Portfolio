@@ -6,11 +6,12 @@ import useBookmarks from './useBookmarks';
 import {useLocation} from '@docusaurus/router';
 import BookSearch from './BookSearch';
 import {highlightTerms, clearHighlights} from './highlight';
+import {usePageCounts, report as reportPages} from './pageCounts';
 
 const FLIP_MS = 900;
 const SLIM_FROM = 120;
 
-export default function BookFrame({runningHead, toc = [], showBack = true, prev, next, bookmark = null, searchChapter, children}) {
+export default function BookFrame({runningHead, toc = [], showBack = true, prev, next, bookmark = null, searchChapter, chapterKey, children}) {
   const paperRef = useRef(null);
   const viewportRef = useRef(null);
   const columnsRef = useRef(null);
@@ -30,6 +31,8 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
   const location = useLocation();
 
   const {bookmarks, setBookmark, clearBookmark} = useBookmarks();
+  const counts = usePageCounts();
+  const hasCount = !!(chapterKey && counts.items[chapterKey]); 
   const mine = bookmark ? bookmarks[bookmark.chapterKey] : undefined;
 
   const getGap = () => {
@@ -134,6 +137,22 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
     const el = blocksRoot().children[mine.block];
     setSavedPage(el ? pageOf(el) : -1);
   }, [bookmark?.path, mine, spread, spreads, pages, perSpread, pageOf]);
+
+  useEffect(() => {
+    if (!chapterKey) return undefined;
+    const inFrame = new URLSearchParams(window.location.search).has('measure');
+    const t = setTimeout(
+      () => {
+        if (inFrame) {
+          window.parent.postMessage({type: 'book-pages', key: chapterKey, pages, per: perSpread}, window.location.origin);
+        } else {
+          reportPages(chapterKey, pages, perSpread);
+        }
+      },
+      inFrame ? 900 : 600,
+    );
+    return () => clearTimeout(t);
+  }, [chapterKey, pages, perSpread, hasCount]);
 
   const onThisSpread = savedPage >= 0 && Math.floor(savedPage / perSpread) === spread;
 
@@ -359,9 +378,10 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
     return () => window.removeEventListener('keydown', onKey);
   }, [menuOpen]);
 
-  const leftNo = shown * perSpread + 1;
-  const rightNo = leftNo + 1;
-  const showRight = perSpread === 2 && rightNo <= pages;
+  const start = chapterKey ? counts.starts[chapterKey] : null;
+  const leftNo = start ? start + shown * perSpread : null;
+  const rightNo = leftNo === null ? null : leftNo + 1;
+  const showRight = perSpread === 2 && leftNo !== null && shown * perSpread + 2 <= pages;
 
   const prevArrow =
     spread > 0 ? (
@@ -479,7 +499,9 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
 
           <footer className={styles.footer}>
             <div className={styles.footCell}>
-              <span className={styles.pageNo}>{leftNo}</span>
+              <span className={styles.pageNo}>
+                {leftNo !== null && <span className={styles.pageNo}>{leftNo}</span>}
+              </span>
               {prevArrow}
             </div>
             <div className={clsx(styles.footCell, styles.footRight)}>

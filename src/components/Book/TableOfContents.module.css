@@ -34,3 +34,5 @@
 }
 .resume:hover { color: #9b2d30; text-decoration: underline; }
 :global([data-theme='dark']) .resume { color: #e08a88; }
+
+.pg { min-width: 2.5ch; text-align: right; font-variant-numeric: tabular-nums; opacity: 0.85; }

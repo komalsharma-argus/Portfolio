@@ -26,6 +26,7 @@ export default function DocItemLayout({children}) {
       searchChapter={chapter?.key}
       bookmark={bookmark}
       showBack={!isIntro}
+      chapterKey={chapter?.key}
       prev={metadata.previous}
       next={metadata.next}>
       {isIntro && (

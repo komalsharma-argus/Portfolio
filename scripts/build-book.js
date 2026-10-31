@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 const {ORDER} = require('./book-order');
 
 const SRC = 'docs';
@@ -171,8 +172,15 @@ children('').forEach((item) => {
   n += 1;
   const key = item.name.replace(NUMBER_PREFIX, '');
   const front = ['---', `title: ${JSON.stringify(item.name)}`, `sidebar_position: ${n}`, 'toc_max_heading_level: 4', '---'].join('\n');
-  fs.writeFileSync(path.join(OUT, `${key}.md`), `${front}\n\n# ${item.name}\n\n${render(item.rel, 1)}\n`);
-  chapters.push({number: n, key, title: item.name, link: `/docs/${key}`});
+  const text = `${front}\n\n# ${item.name}\n\n${render(item.rel, 1)}\n`;
+  fs.writeFileSync(path.join(OUT, `${key}.md`), text);
+  chapters.push({
+    number: n,
+    key,
+    title: item.name,
+    link: `/docs/${key}`,
+    hash: crypto.createHash('md5').update(text).digest('hex').slice(0, 10),
+  });
 });
 
 fs.mkdirSync('src/data', {recursive: true});
