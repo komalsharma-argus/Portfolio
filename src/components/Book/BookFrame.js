@@ -6,7 +6,11 @@ import useBookmarks from './useBookmarks';
 import {useLocation} from '@docusaurus/router';
 import BookSearch from './BookSearch';
 import {highlightTerms, clearHighlights} from './highlight';
-import {usePageCounts, report as reportPages} from './pageCounts';
+import '@fontsource/lora/400.css';
+import '@fontsource/lora/400-italic.css';
+import '@fontsource/lora/700.css';
+import {useProfile} from './profiles';
+import {startsFor} from './pageCounts';
 
 const FLIP_MS = 900;
 const SLIM_FROM = 120;
@@ -31,8 +35,14 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
   const location = useLocation();
 
   const {bookmarks, setBookmark, clearBookmark} = useBookmarks();
-  const counts = usePageCounts();
-  const hasCount = !!(chapterKey && counts.items[chapterKey]); 
+  const profile = useProfile();
+  const starts = startsFor(profile);
+  const deskStyle = {
+    '--page-w': `${profile.w}px`,
+    '--page-h': `${profile.h}px`,
+    '--per': profile.per,
+    '--gap': profile.per === 2 ? '3.5rem' : '2rem',
+  };
   const mine = bookmark ? bookmarks[bookmark.chapterKey] : undefined;
 
   const getGap = () => {
@@ -139,20 +149,19 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
   }, [bookmark?.path, mine, spread, spreads, pages, perSpread, pageOf]);
 
   useEffect(() => {
-    if (!chapterKey) return undefined;
-    const inFrame = new URLSearchParams(window.location.search).has('measure');
+    if (!chapterKey || !new URLSearchParams(window.location.search).has('measure')) return undefined;
     const t = setTimeout(
-      () => {
-        if (inFrame) {
-          window.parent.postMessage({type: 'book-pages', key: chapterKey, pages, per: perSpread}, window.location.origin);
-        } else {
-          reportPages(chapterKey, pages, perSpread);
-        }
-      },
-      inFrame ? 900 : 600,
+      () => window.parent.postMessage({type: 'book-pages', profile: profile.id, key: chapterKey, pages}, window.location.origin),
+      1200,
     );
     return () => clearTimeout(t);
-  }, [chapterKey, pages, perSpread, hasCount]);
+  }, [chapterKey, pages, profile.id]);
+
+  useEffect(() => {
+    measure();
+    const t = setTimeout(measure, 150);
+    return () => clearTimeout(t);
+  }, [profile.id, measure]);
 
   const onThisSpread = savedPage >= 0 && Math.floor(savedPage / perSpread) === spread;
 
@@ -378,7 +387,7 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
     return () => window.removeEventListener('keydown', onKey);
   }, [menuOpen]);
 
-  const start = chapterKey ? counts.starts[chapterKey] : null;
+  const start = chapterKey ? starts[chapterKey] : null;
   const leftNo = start ? start + shown * perSpread : null;
   const rightNo = leftNo === null ? null : leftNo + 1;
   const showRight = perSpread === 2 && leftNo !== null && shown * perSpread + 2 <= pages;
@@ -396,46 +405,76 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
     <Link to={next.permalink} className={styles.arrow} aria-label={`Next topic: ${next.title}`} title={`Next: ${next.title}`}>{next.title} ›</Link>
     ) : null;
 
-  return (
-    <div className={styles.desk} data-book-root>
+    return (
+    <div className={styles.desk} data-book-root data-profile={profile.id} data-single={profile.per === 1 || undefined} style={deskStyle}>
       <div className={styles.book}>
-        <div className={styles.paper} ref={paperRef}>
-          <header className={styles.header}>
-            <span className={styles.running}>{runningHead}</span>
-            <span className={clsx(styles.running, styles.runningRight)} aria-hidden="true">{runningHead}</span>
-            {hasMenu && (
-              <button
-                type="button"
-                className={styles.menuBtn}
-                aria-label="Menu"
-                aria-expanded={menuOpen}
-                onClick={() => setMenuOpen((o) => !o)}>
-                <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true">
-                  <circle cx="10" cy="4" r="1.8" fill="currentColor" />
-                  <circle cx="10" cy="10" r="1.8" fill="currentColor" />
-                  <circle cx="10" cy="16" r="1.8" fill="currentColor" />
-                </svg>
-              </button>
-            )}
-            <BookSearch variant="page" chapter={searchChapter} />
-          </header>
-          <div className={styles.rule} aria-hidden="true" />
-          {bookmark && (perSpread === 2 ? [0, 1] : [0]).map((side, i, all) => {
-            const on = savedPage === spread * perSpread + side;
-            const last = i === all.length - 1; // the ribbon next to the menu button
-            return (
-              <button
-                key={side}
-                type="button"
-                className={clsx(styles.ribbon, last ? styles.ribbonRight : styles.ribbonLeft, on && styles.ribbonOn)}
-                onClick={() => toggleBookmark(side)}
-                aria-pressed={on}
-                aria-label={on ? 'Remove bookmark' : 'Bookmark this page'}
-                title={on ? 'Remove bookmark' : mine ? 'Move bookmark here' : 'Bookmark this page'}
-              />
-            );
-          })}
+        <div className={styles.paper} data-book-paper ref={paperRef}>
+          <div className={styles.sheet} data-book-sheet>
+            <header className={styles.header}>
+              <span className={styles.running}>{runningHead}</span>
+              <span className={clsx(styles.running, styles.runningRight)} aria-hidden="true">{runningHead}</span>
+              {hasMenu && (
+                <button
+                  type="button"
+                  className={styles.menuBtn}
+                  aria-label="Menu"
+                  aria-expanded={menuOpen}
+                  onClick={() => setMenuOpen((o) => !o)}>
+                  <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true">
+                    <circle cx="10" cy="4" r="1.8" fill="currentColor" />
+                    <circle cx="10" cy="10" r="1.8" fill="currentColor" />
+                    <circle cx="10" cy="16" r="1.8" fill="currentColor" />
+                  </svg>
+                </button>
+              )}
+              <BookSearch variant="page" chapter={searchChapter} />
+            </header>
+            <div className={styles.rule} aria-hidden="true" />
 
+            {bookmark && (perSpread === 2 ? [0, 1] : [0]).map((side, i, all) => {
+              const on = savedPage === spread * perSpread + side;
+              const last = i === all.length - 1; // the ribbon next to the menu button
+              return (
+                <button
+                  key={side}
+                  type="button"
+                  className={clsx(styles.ribbon, last ? styles.ribbonRight : styles.ribbonLeft, on && styles.ribbonOn)}
+                  onClick={() => toggleBookmark(side)}
+                  aria-pressed={on}
+                  aria-label={on ? 'Remove bookmark' : 'Bookmark this page'}
+                  title={on ? 'Remove bookmark' : mine ? 'Move bookmark here' : 'Bookmark this page'}
+                />
+              );
+            })}
+
+            <div className={styles.viewport} data-book-viewport ref={viewportRef}>
+              <div
+                className={styles.columns}
+                ref={columnsRef}
+                style={{'--spread': spread, transform: `translateX(${-spread * step}px)`}}
+                onClick={onContentClick}>
+                <div ref={contentRef} className={styles.content}>{children}</div>
+              </div>
+            </div>
+
+            <div className={styles.rule} aria-hidden="true" />
+
+            <footer className={styles.footer}>
+              <div className={styles.footCell}>
+                {leftNo !== null && <span className={styles.pageNo}>{leftNo}</span>}
+                {prevArrow}
+              </div>
+              <div className={clsx(styles.footCell, styles.footRight)}>
+                {nextArrow}
+                {showRight && <span className={styles.pageNo}>{rightNo}</span>}
+              </div>
+            </footer>
+          </div>
+
+          {/* the page-turn layer covers the whole paper, not just the sheet */}
+          <div className={styles.fx} ref={fxRef} aria-hidden="true" />
+
+          {/* the sidebar covers the whole paper too */}
           <div className={clsx(styles.scrim, menuOpen && styles.scrimOpen)} onClick={() => setMenuOpen(false)} />
           <aside
             className={clsx(styles.sidebar, menuOpen && styles.sidebarOpen)}
@@ -482,33 +521,6 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
               </>
             )}
           </aside>
-          <div className={styles.viewport} ref={viewportRef}>
-            <div 
-              className={styles.columns} 
-              ref={columnsRef} 
-              style={{'--spread': spread, transform: `translateX(${-spread * step}px)`}} 
-              onClick={onContentClick}
-            >
-              <div ref={contentRef} className={styles.content}>{children}</div>
-            </div>
-          </div>
-
-          <div className={styles.rule} aria-hidden="true" />
-
-          <div className={styles.fx} ref={fxRef} aria-hidden="true" />
-
-          <footer className={styles.footer}>
-            <div className={styles.footCell}>
-              <span className={styles.pageNo}>
-                {leftNo !== null && <span className={styles.pageNo}>{leftNo}</span>}
-              </span>
-              {prevArrow}
-            </div>
-            <div className={clsx(styles.footCell, styles.footRight)}>
-              {nextArrow}
-              {showRight && <span className={styles.pageNo}>{rightNo}</span>}
-            </div>
-          </footer>
         </div>
       </div>
     </div>

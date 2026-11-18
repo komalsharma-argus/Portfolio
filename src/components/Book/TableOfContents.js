@@ -4,10 +4,12 @@ import chapters from '@site/src/data/chapters.json';
 import styles from './TableOfContents.module.css';
 import useBookmarks from './useBookmarks';
 import TurnLink from './TurnLink';
-import {usePageCounts} from './pageCounts';
+import {useProfile} from './profiles';
+import {startsFor} from './pageCounts';
 
 export default function TableOfContents() {
-  const {starts} = usePageCounts();
+  const profile = useProfile();
+  const starts = startsFor(profile);
   const {bookmarks} = useBookmarks();
   return (
     <nav aria-label="Table of Contents">
