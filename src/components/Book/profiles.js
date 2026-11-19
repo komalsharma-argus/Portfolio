@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 
-const CHROME_W = 60; // free space left and right of the pages
+const CHROME_W = 40; // free space left and right of the pages
 const CHROME_H = 215; // navbar, footer, header/footer strips and lines above and below the text
 const GUTTER = 56; // 3.5rem: the gap between the two pages
 const MAX_PAGE_W = 640; // wider lines are hard to read: extra width becomes margin

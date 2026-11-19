@@ -66,7 +66,8 @@ export default function BookSearch({variant = 'navbar', chapter}) {
   const [wide, setWide] = useState(false);
   const index = useSearchIndex(wanted);
 
-  const scope = variant === 'page' && !wide ? chapter : undefined;
+  const chapterScoped = variant !== 'navbar';
+  const scope = chapterScoped && !wide ? chapter : undefined;
   const scopeTitle = chapters.find((c) => c.key === chapter)?.title;
   const terms = termsOf(query);
   const long = query.trim().length >= 2;
@@ -144,8 +145,18 @@ export default function BookSearch({variant = 'navbar', chapter}) {
     }
   };
 
-  const placeholder = variant === 'page' && scope && scopeTitle ? `Search in ${scopeTitle}` : 'Search the book';
-  const showResults = open && query.trim().length > 0;
+  const placeholder = chapterScoped && scope && scopeTitle ? `Search in ${scopeTitle}` : 'Search the book';
+  const showResults = open && (query.trim().length > 0 || variant === 'bar');
+
+  const scopeLine = chapterScoped && chapter && scopeTitle && (
+    <p className={styles.scope}>
+      {wide ? 'All chapters' : <>In <strong>{scopeTitle}</strong></>}
+      {' · '}
+      <button type="button" className={styles.widen} onClick={() => setWide((w) => !w)}>
+        {wide ? `Only ${scopeTitle}` : 'Search all chapters'}
+      </button>
+    </p>
+  );
 
   return (
     <div ref={rootRef} className={clsx(styles.root, styles[variant], open && styles.open)}>
@@ -189,18 +200,11 @@ export default function BookSearch({variant = 'navbar', chapter}) {
           </button>
         </label>
 
-        {variant === 'page' && chapter && scopeTitle && (
-          <p className={styles.scope}>
-            {wide ? 'All chapters' : <>In <strong>{scopeTitle}</strong></>}
-            {' · '}
-            <button type="button" className={styles.widen} onClick={() => setWide((w) => !w)}>
-              {wide ? `Only ${scopeTitle}` : 'Search all chapters'}
-            </button>
-          </p>
-        )}
+        {variant === 'page' && scopeLine}
 
         {showResults && (
           <div className={styles.results} ref={listRef} role="listbox">
+            {variant === 'bar' && scopeLine}
             {index.status === 'loading' && <p className={styles.status}>Loading the search index…</p>}
             {index.status === 'error' && (
               <p className={styles.status}>

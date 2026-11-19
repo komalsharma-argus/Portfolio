@@ -411,8 +411,14 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
         <div className={styles.paper} data-book-paper ref={paperRef}>
           <div className={styles.sheet} data-book-sheet>
             <header className={styles.header}>
-              <span className={styles.running}>{runningHead}</span>
+              <div className={styles.headLeft}>
+                <span className={styles.running}>{runningHead}</span>
+                {/* two pages: the search bar after the chapter name */}
+                {profile.per === 2 && <BookSearch variant="bar" chapter={searchChapter} />}
+              </div>
               <span className={clsx(styles.running, styles.runningRight)} aria-hidden="true">{runningHead}</span>
+              {/* one page: only the search icon (opens a popover) */}
+              {profile.per === 1 && <BookSearch variant="page" chapter={searchChapter} />}
               {hasMenu && (
                 <button
                   type="button"
@@ -427,7 +433,6 @@ export default function BookFrame({runningHead, toc = [], showBack = true, prev,
                   </svg>
                 </button>
               )}
-              <BookSearch variant="page" chapter={searchChapter} />
             </header>
             <div className={styles.rule} aria-hidden="true" />
 

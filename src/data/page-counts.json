@@ -210,261 +210,261 @@
   "X4": {
     "PostgreSQL": {
       "hash": "cd1fceed3b",
-      "size": "590x540",
-      "pages": 49
+      "size": "600x540",
+      "pages": 48
     },
     "JavaScript": {
       "hash": "5e2b667bbe",
-      "size": "590x540",
+      "size": "600x540",
       "pages": 183
     },
     "npm": {
       "hash": "3dfdc48cb0",
-      "size": "590x540",
+      "size": "600x540",
       "pages": 75
     },
     "NodeJS": {
       "hash": "aa9ecb324d",
-      "size": "590x540",
-      "pages": 88
+      "size": "600x540",
+      "pages": 86
     },
     "React": {
       "hash": "b2024957ac",
-      "size": "590x540",
+      "size": "600x540",
       "pages": 104
     },
     "Git & GitHub": {
       "hash": "92971fca49",
-      "size": "590x540",
-      "pages": 40
+      "size": "600x540",
+      "pages": 39
     },
     "Yarn": {
       "hash": "1132cd5b22",
-      "size": "590x540",
-      "pages": 57
+      "size": "600x540",
+      "pages": 56
     },
     "Webpack": {
       "hash": "580892ee91",
-      "size": "590x540",
+      "size": "600x540",
       "pages": 72
     },
     "OWASP-Top-10": {
       "hash": "5c3fface8c",
-      "size": "590x540",
+      "size": "600x540",
       "pages": 28
     },
     "AZ-900-Ms-Azure-Fundamentals": {
       "hash": "495d920686",
-      "size": "590x540",
+      "size": "600x540",
       "pages": 24
     }
   },
   "X3": {
     "PostgreSQL": {
       "hash": "cd1fceed3b",
-      "size": "540x470",
+      "size": "550x470",
       "pages": 58
     },
     "JavaScript": {
       "hash": "5e2b667bbe",
-      "size": "540x470",
+      "size": "550x470",
       "pages": 218
     },
     "npm": {
       "hash": "3dfdc48cb0",
-      "size": "540x470",
+      "size": "550x470",
       "pages": 88
     },
     "NodeJS": {
       "hash": "aa9ecb324d",
-      "size": "540x470",
+      "size": "550x470",
       "pages": 106
     },
     "React": {
       "hash": "b2024957ac",
-      "size": "540x470",
+      "size": "550x470",
       "pages": 119
     },
     "Git & GitHub": {
       "hash": "92971fca49",
-      "size": "540x470",
+      "size": "550x470",
       "pages": 45
     },
     "Yarn": {
       "hash": "1132cd5b22",
-      "size": "540x470",
-      "pages": 69
+      "size": "550x470",
+      "pages": 67
     },
     "Webpack": {
       "hash": "580892ee91",
-      "size": "540x470",
-      "pages": 85
+      "size": "550x470",
+      "pages": 84
     },
     "OWASP-Top-10": {
       "hash": "5c3fface8c",
-      "size": "540x470",
+      "size": "550x470",
       "pages": 33
     },
     "AZ-900-Ms-Azure-Fundamentals": {
       "hash": "495d920686",
-      "size": "540x470",
-      "pages": 29
+      "size": "550x470",
+      "pages": 28
     }
   },
   "X2": {
     "PostgreSQL": {
       "hash": "cd1fceed3b",
-      "size": "490x400",
-      "pages": 73
+      "size": "500x400",
+      "pages": 72
     },
     "JavaScript": {
       "hash": "5e2b667bbe",
-      "size": "490x400",
+      "size": "500x400",
       "pages": 264
     },
     "npm": {
       "hash": "3dfdc48cb0",
-      "size": "490x400",
+      "size": "500x400",
       "pages": 107
     },
     "NodeJS": {
       "hash": "aa9ecb324d",
-      "size": "490x400",
-      "pages": 130
+      "size": "500x400",
+      "pages": 129
     },
     "React": {
       "hash": "b2024957ac",
-      "size": "490x400",
-      "pages": 146
+      "size": "500x400",
+      "pages": 145
     },
     "Git & GitHub": {
       "hash": "92971fca49",
-      "size": "490x400",
+      "size": "500x400",
       "pages": 57
     },
     "Yarn": {
       "hash": "1132cd5b22",
-      "size": "490x400",
-      "pages": 88
+      "size": "500x400",
+      "pages": 87
     },
     "Webpack": {
       "hash": "580892ee91",
-      "size": "490x400",
+      "size": "500x400",
       "pages": 103
     },
     "OWASP-Top-10": {
       "hash": "5c3fface8c",
-      "size": "490x400",
+      "size": "500x400",
       "pages": 42
     },
     "AZ-900-Ms-Azure-Fundamentals": {
       "hash": "495d920686",
-      "size": "490x400",
+      "size": "500x400",
       "pages": 37
     }
   },
   "X1": {
     "PostgreSQL": {
       "hash": "cd1fceed3b",
-      "size": "440x340",
+      "size": "450x340",
       "pages": 91
     },
     "JavaScript": {
       "hash": "5e2b667bbe",
-      "size": "440x340",
+      "size": "450x340",
       "pages": 327
     },
     "npm": {
       "hash": "3dfdc48cb0",
-      "size": "440x340",
+      "size": "450x340",
       "pages": 126
     },
     "NodeJS": {
       "hash": "aa9ecb324d",
-      "size": "440x340",
-      "pages": 162
+      "size": "450x340",
+      "pages": 160
     },
     "React": {
       "hash": "b2024957ac",
-      "size": "440x340",
-      "pages": 180
+      "size": "450x340",
+      "pages": 177
     },
     "Git & GitHub": {
       "hash": "92971fca49",
-      "size": "440x340",
+      "size": "450x340",
       "pages": 65
     },
     "Yarn": {
       "hash": "1132cd5b22",
-      "size": "440x340",
-      "pages": 110
+      "size": "450x340",
+      "pages": 108
     },
     "Webpack": {
       "hash": "580892ee91",
-      "size": "440x340",
+      "size": "450x340",
       "pages": 134
     },
     "OWASP-Top-10": {
       "hash": "5c3fface8c",
-      "size": "440x340",
-      "pages": 54
+      "size": "450x340",
+      "pages": 53
     },
     "AZ-900-Ms-Azure-Fundamentals": {
       "hash": "495d920686",
-      "size": "440x340",
-      "pages": 46
+      "size": "450x340",
+      "pages": 45
     }
   },
   "X0": {
     "PostgreSQL": {
       "hash": "cd1fceed3b",
-      "size": "390x300",
-      "pages": 114
+      "size": "400x300",
+      "pages": 111
     },
     "JavaScript": {
       "hash": "5e2b667bbe",
-      "size": "390x300",
-      "pages": 380
+      "size": "400x300",
+      "pages": 379
     },
     "npm": {
       "hash": "3dfdc48cb0",
-      "size": "390x300",
+      "size": "400x300",
       "pages": 145
     },
     "NodeJS": {
       "hash": "aa9ecb324d",
-      "size": "390x300",
-      "pages": 197
+      "size": "400x300",
+      "pages": 195
     },
     "React": {
       "hash": "b2024957ac",
-      "size": "390x300",
-      "pages": 210
+      "size": "400x300",
+      "pages": 208
     },
     "Git & GitHub": {
       "hash": "92971fca49",
-      "size": "390x300",
-      "pages": 82
+      "size": "400x300",
+      "pages": 81
     },
     "Yarn": {
       "hash": "1132cd5b22",
-      "size": "390x300",
-      "pages": 136
+      "size": "400x300",
+      "pages": 133
     },
     "Webpack": {
       "hash": "580892ee91",
-      "size": "390x300",
-      "pages": 164
+      "size": "400x300",
+      "pages": 160
     },
     "OWASP-Top-10": {
       "hash": "5c3fface8c",
-      "size": "390x300",
+      "size": "400x300",
       "pages": 67
     },
     "AZ-900-Ms-Azure-Fundamentals": {
       "hash": "495d920686",
-      "size": "390x300",
-      "pages": 60
+      "size": "400x300",
+      "pages": 56
     }
   },
   "T2": {
@@ -522,157 +522,157 @@
   "T1": {
     "PostgreSQL": {
       "hash": "cd1fceed3b",
-      "size": "500x540",
-      "pages": 57
+      "size": "520x540",
+      "pages": 56
     },
     "JavaScript": {
       "hash": "5e2b667bbe",
-      "size": "500x540",
+      "size": "520x540",
       "pages": 194
     },
     "npm": {
       "hash": "3dfdc48cb0",
-      "size": "500x540",
-      "pages": 81
+      "size": "520x540",
+      "pages": 80
     },
     "NodeJS": {
       "hash": "aa9ecb324d",
-      "size": "500x540",
-      "pages": 99
+      "size": "520x540",
+      "pages": 97
     },
     "React": {
       "hash": "b2024957ac",
-      "size": "500x540",
-      "pages": 113
+      "size": "520x540",
+      "pages": 112
     },
     "Git & GitHub": {
       "hash": "92971fca49",
-      "size": "500x540",
+      "size": "520x540",
       "pages": 43
     },
     "Yarn": {
       "hash": "1132cd5b22",
-      "size": "500x540",
-      "pages": 65
+      "size": "520x540",
+      "pages": 64
     },
     "Webpack": {
       "hash": "580892ee91",
-      "size": "500x540",
-      "pages": 80
+      "size": "520x540",
+      "pages": 79
     },
     "OWASP-Top-10": {
       "hash": "5c3fface8c",
-      "size": "500x540",
-      "pages": 33
+      "size": "520x540",
+      "pages": 31
     },
     "AZ-900-Ms-Azure-Fundamentals": {
       "hash": "495d920686",
-      "size": "500x540",
-      "pages": 28
+      "size": "520x540",
+      "pages": 27
     }
   },
   "U": {
     "PostgreSQL": {
       "hash": "cd1fceed3b",
-      "size": "410x440",
-      "pages": 80
+      "size": "430x440",
+      "pages": 77
     },
     "JavaScript": {
       "hash": "5e2b667bbe",
-      "size": "410x440",
-      "pages": 258
+      "size": "430x440",
+      "pages": 256
     },
     "npm": {
       "hash": "3dfdc48cb0",
-      "size": "410x440",
-      "pages": 103
+      "size": "430x440",
+      "pages": 101
     },
     "NodeJS": {
       "hash": "aa9ecb324d",
-      "size": "410x440",
-      "pages": 136
+      "size": "430x440",
+      "pages": 131
     },
     "React": {
       "hash": "b2024957ac",
-      "size": "410x440",
-      "pages": 147
+      "size": "430x440",
+      "pages": 146
     },
     "Git & GitHub": {
       "hash": "92971fca49",
-      "size": "410x440",
-      "pages": 57
+      "size": "430x440",
+      "pages": 56
     },
     "Yarn": {
       "hash": "1132cd5b22",
-      "size": "410x440",
-      "pages": 93
+      "size": "430x440",
+      "pages": 89
     },
     "Webpack": {
       "hash": "580892ee91",
-      "size": "410x440",
-      "pages": 105
+      "size": "430x440",
+      "pages": 103
     },
     "OWASP-Top-10": {
       "hash": "5c3fface8c",
-      "size": "410x440",
-      "pages": 47
+      "size": "430x440",
+      "pages": 45
     },
     "AZ-900-Ms-Azure-Fundamentals": {
       "hash": "495d920686",
-      "size": "410x440",
-      "pages": 39
+      "size": "430x440",
+      "pages": 37
     }
   },
   "S2": {
     "PostgreSQL": {
       "hash": "cd1fceed3b",
-      "size": "320x480",
-      "pages": 88
+      "size": "340x480",
+      "pages": 84
     },
     "JavaScript": {
       "hash": "5e2b667bbe",
-      "size": "320x480",
-      "pages": 250
+      "size": "340x480",
+      "pages": 248
     },
     "npm": {
       "hash": "3dfdc48cb0",
-      "size": "320x480",
-      "pages": 101
+      "size": "340x480",
+      "pages": 99
     },
     "NodeJS": {
       "hash": "aa9ecb324d",
-      "size": "320x480",
-      "pages": 145
+      "size": "340x480",
+      "pages": 137
     },
     "React": {
       "hash": "b2024957ac",
-      "size": "320x480",
-      "pages": 145
+      "size": "340x480",
+      "pages": 139
     },
     "Git & GitHub": {
       "hash": "92971fca49",
-      "size": "320x480",
-      "pages": 58
+      "size": "340x480",
+      "pages": 57
     },
     "Yarn": {
       "hash": "1132cd5b22",
-      "size": "320x480",
-      "pages": 98
+      "size": "340x480",
+      "pages": 95
     },
     "Webpack": {
       "hash": "580892ee91",
-      "size": "320x480",
-      "pages": 107
+      "size": "340x480",
+      "pages": 103
     },
     "OWASP-Top-10": {
       "hash": "5c3fface8c",
-      "size": "320x480",
-      "pages": 54
+      "size": "340x480",
+      "pages": 50
     },
     "AZ-900-Ms-Azure-Fundamentals": {
       "hash": "495d920686",
-      "size": "320x480",
-      "pages": 43
+      "size": "340x480",
+      "pages": 41
     }
   },
   "S": {

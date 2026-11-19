@@ -74,7 +74,7 @@
   padding-right: 1.75rem;
 }
 .runningRight {
-  padding-right: 7.5rem;
+  padding-right: 4.5rem;
 }
 .menuBtn {
   position: absolute; top: 50%; right: 0; transform: translateY(-50%);
@@ -221,7 +221,7 @@ button.menuLink {
 .ribbonOn { background: #9b2d30; }
 .ribbonOn:hover { background: #b23a3d; }
 .ribbon.ribbonLeft  { right: calc(50% + var(--gap, 3.5rem) / 2); }
-.ribbon.ribbonRight { right: 4.5rem; }
+.ribbon.ribbonRight { right: 2.4rem; }
 :global([data-theme='dark']) .ribbon { background: #6a5d4c; }
 :global([data-theme='dark']) .ribbon:hover { background: #8a7a63; }
 :global([data-theme='dark']) .ribbonOn { background: #b5403f; }
@@ -258,6 +258,10 @@ button.menuLink {
 .pageRight { background: linear-gradient(to right, rgba(0, 0, 0, 0.22) 0, var(--paper-shade) 5px, var(--paper) 60px); }
 .pageLeft { background: linear-gradient(to left, rgba(0, 0, 0, 0.22) 0, var(--paper-shade) 5px, var(--paper) 60px); }
 
+.headLeft { display: flex; align-items: center; min-width: 0; padding-right: 2.25rem; }
+.headLeft .running { flex: 0 1 auto; max-width: 40%; }
+:global([data-single]) .headLeft { padding-right: 6.5rem; }
+
 @media (prefers-reduced-motion: reduce) { .sidebar, .scrim { transition: none; } }
 :global([data-single]) .paper { background: var(--paper); }
 :global([data-single]) .runningRight { display: none; }
@@ -265,3 +269,4 @@ button.menuLink {
 :global([data-single]) .footRight { position: absolute; top: 0; right: 0; height: 100%; }
 :global([data-single]) .footRight .arrow { position: static; transform: none; }
 :global([data-single]) .content { font-size: 16px; }
+:global([data-single]) .ribbon.ribbonRight { right: 4.75rem; }
