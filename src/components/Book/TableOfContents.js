@@ -12,6 +12,7 @@ export default function TableOfContents() {
   const starts = startsFor(profile);
   const {bookmarks} = useBookmarks();
   return (
+    <>
     <nav aria-label="Table of Contents">
       <h2 className={styles.heading}>Table of Contents</h2>
       <ol className={styles.list}>
@@ -33,5 +34,6 @@ export default function TableOfContents() {
         })}
       </ol>
     </nav>
+    </>
   );
 }

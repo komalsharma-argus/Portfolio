@@ -5,6 +5,7 @@ import BookFrame from '@site/src/components/Book/BookFrame';
 import TableOfContents from '@site/src/components/Book/TableOfContents';
 import chapters from '@site/src/data/chapters.json';
 import styles from '@site/src/components/Book/BookFrame.module.css';
+import Projects from '@site/src/components/Book/Projects';
 
 export default function DocItemLayout({children}) {
   const {metadata, toc} = useDoc();
@@ -29,12 +30,16 @@ export default function DocItemLayout({children}) {
       chapterKey={chapter?.key}
       prev={metadata.previous}
       next={metadata.next}>
-      {isIntro && (
-        <div className={styles.columnBreak}>
-          <TableOfContents />
-        </div>
+      {isIntro ? (
+        <>
+          <div className={styles.columnBreak}>
+            <TableOfContents />
+          </div>
+          <Projects />
+        </>
+      ) : (
+        <DocItemContent>{children}</DocItemContent>
       )}
-      <DocItemContent>{children}</DocItemContent>
     </BookFrame>
   );
 }
